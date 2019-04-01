@@ -516,7 +516,7 @@ void BSP_LCD_GLASS_DisplayChar(uint8_t *ch, Point_Typedef Point, DoublePoint_Typ
 void BSP_LCD_GLASS_DisplayString(uint8_t *ptr);
 void BSP_LCD_GLASS_DisplayStrDeci(uint16_t *ptr);
 void BSP_LCD_GLASS_ScrollSentence(uint8_t *ptr, uint16_t nScroll, uint16_t ScrollSpeed);
-void BSP_LCD_GLASS_DisplayBar(uint32_t BarId);
+void BSP_LCD_GLASS_DisplayBar(BarId_Typedef BarId);
 void BSP_LCD_GLASS_ClearBar(uint32_t BarId);
 void BSP_LCD_GLASS_BarLevelConfig(uint8_t BarLevel);
 void BSP_LCD_GLASS_Clear(void);

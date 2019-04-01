@@ -1,0 +1,7 @@
+menu.c:25:6:WyswietlAlarmy	8	static
+menu.c:47:6:PetlaMenu	24	static
+menu.c:84:6:DrawOpt	16	static
+menu.c:111:6:Obsluz	16	static
+menu.c:138:6:Start_Acc	4	static
+menu.c:143:6:SetAUDIO	24	static
+menu.c:177:6:SetLED	24	static

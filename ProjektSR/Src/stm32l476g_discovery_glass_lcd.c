@@ -263,7 +263,7 @@ void BSP_LCD_GLASS_Contrast(uint32_t Contrast)
   *     @arg BAR0: LCD GLASS Bar 3
   * @retval None
   */
-void BSP_LCD_GLASS_DisplayBar(uint32_t BarId)
+void BSP_LCD_GLASS_DisplayBar(BarId_Typedef BarId)
 {
   uint32_t position = 0;
 

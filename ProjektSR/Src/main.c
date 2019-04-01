@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#include <myTime.h>
 #include "main.h"
 #include <string.h>
 #include "menu.h"
@@ -85,7 +86,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	char g[] = "HELLO";
+	char g[] = "HELLO WORL:D!!!";
+
+	RTC_TimeTypeDef msTime;
+	RTC_DateTypeDef msDate;
+	RCC_OscInitTypeDef RCC_OscInitLSI;
+
+	enum OStatus oStatus = fLED|fAUDIO; // ustawienia wyj LED/AUDIO
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -105,41 +112,87 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
+
+  BSP_LCD_GLASS_Init();
+  BSP_LCD_GLASS_DisplayString("WAIT  ");
   MX_QUADSPI_Init();
   MX_SAI1_Init();
-  MX_LCD_Init();
-  BSP_LCD_GLASS_Init();
   MX_I2C1_Init();
+  BSP_QSPI_Init();
+  MX_GPIO_Init();
+
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
   /* USER CODE END 2 */
 
 
+  HAL_Delay(100);
+  BSP_LCD_GLASS_Clear();
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+/*
 	  if(joy_event == fJOY_CENTER)
 	  {
-		  BSP_LCD_GLASS_DisplayString(g); joy_event = fJOY_NONE;
+		  __RESET_JOY(joy_event);
+		  BSP_LCD_GLASS_DisplayString(g);
 	  }
 	  if(joy_event == fJOY_DOWN)
 	  {
-		  BSP_LCD_GLASS_Clear(); joy_event = fJOY_NONE;
+		  __RESET_JOY(joy_event);
+		  BSP_LCD_GLASS_Clear();
 	  }
 	  if(joy_event == fJOY_UP)
 	  {
-		  HAL_GPIO_TogglePin(GPIOE, LED_G_Pin);
-		  BSP_LCD_GLASS_DisplayBar(LCD_BAR_0);
-		  joy_event = fJOY_NONE;
+		  __RESET_JOY(joy_event);
+		//  HAL_GPIO_TogglePin(GPIOE, LED_G_Pin);
+	//	  BSP_LCD_GLASS_DisplayBar(LCD_BAR_0);
+
+		//  SetTime(&hrtc);
+
+
+	  }
+	  if(joy_event == fJOY_RIGHT)
+	  {
+		 __RESET_JOY(joy_event);
+		  SetDate(&hrtc);
 	  }
 
-	  HAL_LCD_UpdateDisplayRequest(&hlcd);
-	  HAL_Delay(100);
+//	  HAL_StatusTypeDef resd = HAL_RTC_GetTime(&hrtc,&msTime,RTC_FORMAT_BIN);
+//	  HAL_StatusTypeDef resd2 = HAL_RTC_GetDate(&hrtc,&msDate,RTC_FORMAT_BIN);
+//	  Time[0] = msTime.Hours;
+//	  Time[1] = msTime.Minutes;
+//	  Time[2] = msTime.Seconds;
+//	  itoa(Time[0],g,10); if(g[1] == '\0') g[1] = ' ';
+//	  itoa(Time[1],g+2,10); if(g[3] == '\0') g[3] = ' ';
+//	  itoa(Time[2],g+4,10);
+//	  BSP_LCD_GLASS_DisplayString(g);
+	 // HAL_LCD_UpdateDisplayRequest(&hlcd);
+	 // BSP_LCD_GLASS_ScrollSentence(g,1,500);
+
+
+	 HAL_Delay(10);
+	 DrawTime(&hrtc);
 
   }
-  /* USER CODE END 3 */
+   USER CODE END 3 */
+	  if(joy_event == fJOY_CENTER)
+	  {
+		  __RESET_JOY(joy_event);
+		  PetlaMenu(&oStatus);
+	  }
+
+		//  HAL_GPIO_TogglePin(GPIOE, LED_G_Pin);
+	//	  BSP_LCD_GLASS_DisplayBar(LCD_BAR_0);
+
+		//  SetTime(&hrtc);
+	  	  HAL_Delay(10);
+	  	  DrawTime(&hrtc);
+	//  BSP_LCD_GLASS_DisplayString("READY");
+
+  }
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -162,12 +215,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			break;
 	case JOY_UP_Pin:
 		joy_event = fJOY_UP;
+		break;
 	default:
-		//joy_event = fJOY_NONE;
+		//dioda sygnalizujaca bledy
+		HAL_GPIO_WritePin(GPIOB,LED_R_Pin,GPIO_PIN_SET);
 	break;
 	}
 
 }
+
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -178,15 +234,9 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-  /** Configure LSE Drive Capability 
-  */
-  HAL_PWR_EnableBkUpAccess();
-  __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
   /** Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_LSE
-                              |RCC_OSCILLATORTYPE_MSI;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_MSI;
   RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
@@ -237,9 +287,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Enable MSI Auto calibration 
-  */
-  HAL_RCCEx_EnableMSIPLLMode();
 }
 
 /**
@@ -371,6 +418,9 @@ static void MX_RTC_Init(void)
 
   /* USER CODE END RTC_Init 0 */
 
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef sDate = {0};
+
   /* USER CODE BEGIN RTC_Init 1 */
 
   /* USER CODE END RTC_Init 1 */
@@ -385,6 +435,31 @@ static void MX_RTC_Init(void)
   hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
   hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
   if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /* USER CODE BEGIN Check_RTC_BKUP */
+    
+  /* USER CODE END Check_RTC_BKUP */
+
+  /** Initialize RTC and set the Time and Date 
+  */
+  sTime.Hours = 0x8;
+  sTime.Minutes = 0x0;
+  sTime.Seconds = 0x0;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+  sDate.Month = RTC_MONTH_JANUARY;
+  sDate.Date = 0x1;
+  sDate.Year = 0x0;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
   {
     Error_Handler();
   }
@@ -469,7 +544,6 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();

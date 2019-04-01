@@ -1,0 +1,3 @@
+myTime.c:14:6:DrawTime	48	static
+myTime.c:39:6:SetTime	80	static
+myTime.c:127:6:SetDate	40	static
