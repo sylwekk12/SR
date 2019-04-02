@@ -1,0 +1,4 @@
+myTime.c:12:6:HAL_RTC_MspInit	16	static
+myTime.c:28:6:DrawTime	48	static
+myTime.c:53:6:SetTime	80	static
+myTime.c:141:6:SetDate	40	static
