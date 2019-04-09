@@ -1,0 +1,195 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = pl_PL
+
+% $Id:$
+
+%Author: Wojciech Domski
+%Szablon do ząłożeń projektowych, raportu i dokumentacji z steorwników robotów
+%Wersja v.1.0.0
+%
+
+
+%% Konfiguracja:
+\newcommand{\kurs}{Sterowniki robot\'{o}w}
+\newcommand{\formakursu}{Projekt}
+
+%odkomentuj właściwy typ projektu, a pozostałe zostaw zakomentowane
+\newcommand{\doctype}{Za\l{}o\.{z}enia projektowe} %etap I
+%\newcommand{\doctype}{Raport} %etap II
+%\newcommand{\doctype}{Dokumentacja} %etap III
+
+%wpisz nazwę projektu
+\newcommand{\projectname}{Wykrywacz kradzieży}
+
+%wpisz akronim projektu
+\newcommand{\acronim}{WK}
+
+%wpisz Imię i nazwisko oraz numer albumu
+\newcommand{\osobaA}{Sylwester \textsc{Kozieja}, 235798}
+%w przypadku projektu jednoosobowego usuń zawartość nowej komendy
+\newcommand{\osobaB}{Paula \textsc{Langkafel}, 235373}
+
+%wpisz termin w formie, jak poniżej dzień, parzystość, godzina
+\newcommand{\termin}{\'sroda TN 13}
+
+%wpisz imię i nazwisko prowadzącego
+\newcommand{\prowadzacy}{mgr in\.{z}. Wojciech \textsc{Domski}}
+
+\documentclass[10pt, a4paper]{article}
+
+\include{preambula}
+\usepackage{hyperref}	
+\begin{document}
+
+\def\tablename{Tabela}	%zmienienie nazwy tabel z Tablica na Tabela
+
+\begin{titlepage}
+	\begin{center}
+		\textsc{\LARGE \formakursu}\\[1cm]		
+		\textsc{\Large \kurs}\\[0.5cm]		
+		\rule{\textwidth}{0.08cm}\\[0.4cm]
+		{\huge \bfseries \doctype}\\[1cm]
+		{\huge \bfseries \projectname}\\[0.5cm]
+		{\huge \bfseries \acronim}\\[0.4cm]
+		\rule{\textwidth}{0.08cm}\\[1cm]
+		
+		\begin{flushright} \large
+		\emph{Skład grupy:}\\
+		\osobaA\\
+		\osobaB\\[0.4cm]
+		
+		\emph{Termin: }\termin\\[0.4cm]
+
+		\emph{Prowadzący:} \\
+		\prowadzacy \\
+		
+		\end{flushright}
+		
+		\vfill
+		
+		{\large \today}
+	\end{center}	
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+%Obecne we wszystkich dokumentach
+\section{Opis projektu}
+\label{sec:OpisProjektu}
+%Jak rozumieć moduły
+Celem projektu jest stworzenie urządzenia, które poprzez komunikację z akcelerometrem wykrywa niepożądany ruch. Użytkownik będzie miał możliwość wybrania sposobu otrzymywania komunikatów. Jednym z założeń projektu jest wybór opcjonalnego interfejsu audio. Urządzenia ma zawierać menu dające możliwość podstawowej konfiguracji, takiej jak załączenie alarmu i wybór sposobu komunikowania się oraz ustawianie poziomu załączania alarmu. Dodatkową opcją jest wizualizowanie poziomu rejestrowanych przyspieszeń. \\ 
+Na zakres prac składa się oprogramowanie zewnętrznej pamięci Flash , skonfigurowanie akcelerometru, a także realizacja komunikacji z interfejsami.
+
+
+\section{Założenia projektowe}
+\begin{enumerate}
+\item Projekt będzie wykonywany w oparciu o płytkę STM32L476 Discovery wypożyczoną od prowadzącego kurs
+\item Pomiar przyspieszenia będzie odbywał się przez wbudowany moduł z akcelerometrem
+\item W przypadku wykrycia alarmu urządzenie podejmie określone kroki.
+\item Menu sterowane z joystick'iem zapewni możliwość wybór ustawień sygnalizacji alarmu(dioda oraz głośnik).
+\item Zbieranie danych o alarmach i przechowywanie w pamięci Flash.
+\item Wykorzystanie zegara RTC do umiejscowienia zdarzenia alarmu w jego lokalnym czasie.
+\item Badania dotyczące wykrywania progu alarmu i sprawdzenie funkcjonalności zaprojektowanego urządzenia.
+
+\end{enumerate}
+
+
+\section{Harmonogram pracy}
+
+\subsection{Zakres prac}
+Zapoznanie się z mikrokontrolerem, konfiguracja peryferiów. Implementacja obsługi zarówno pamięci Flash, jak i akcelerometru. Skonfigurowanie zegara RTC w celu późniejszej implementacji przekazywania godziny nieplanowanego ruchu. Zapoznanie z literaturą i poruszanym problemem. Przeprowadzenie badań na temat progów i optymalizacji działania urządzenia. 
+\subsection{Kamienie milowe}
+\begin{enumerate}
+\item Oddanie I etapu projektu. Projekt powinien zawierać założenia oraz plan co będzie podstawą do rozpoczęcia prac.
+\item Oddanie II etapu projektu. Konfiguracja peryferiów powinna być już sfinalizowana, a przynajmniej na etapie pozwalającym rozpoczęcie kolejnego etapu związanego z badaniem przyspieszeń które powinny aktywować alarm.
+\item Oddanie III etapu gdzie projekt powinien być już kompletny.
+Wg planu projekt powinien zakończyć się tydzień przed ostatecznym terminem złożenia pracy u prowadzącego.
+\end{enumerate}
+\subsection{Diagram Gantta}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{figures/dg.png}
+	\caption{Diagram Gantta}
+	\label{fig:DiagramGantta}
+\end{figure}
+
+%Obecne w dokumencie do etapu I
+
+\subsection{Podział pracy}
+Oboje uczestnicy projektu zajmą się wstępną konfiguracją peryferiów odbywającą się za pomocą programu CubeMx. Zostanie zaimplementowana obsługa pamięci Flash, a także akcelerometru. W tym czasie opracowany zostanie również sposób przechowywania danych na zewnętrznej pamięci Flash. Projekt menu ma zakładać możliwość wyboru sygnału uruchamiającego alarm.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|L{7cm}|L{0.8cm}||L{7cm}|L{0.8cm}|}
+		\hline
+		\hline
+		\textbf{Sylwester Kozieja} & 
+		\% & 
+		\textbf{Paula Langkafel} & \%\\
+		\hline
+		\hline
+		Wstępna konfiguracja peryferiów w programie CubeMx		& &	
+		Wstępna konfiguracja peryferiów w programie CubeMx &\\
+		\hline
+		Implementacja obsługi pamięci Flash & &
+		Implementacja obsługi akcelerometru &\\
+		\hline
+		Opracowanie sposobu przechowywania danych na zewnętrznej pamięci FLASH & &
+		Wstępny projekt menu  & \\
+		\hline
+		Sygnalizacja audiowizualna za pomocą Audio DAC oraz diody LED & & Konfiguracja zegara RTC &\\
+		\hline
+	\end{tabular}
+	\caption{Podział pracy -- Etap II}
+	\label{tab:PodzialPracyEtap2}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|L{7cm}|L{0.8cm}||L{7cm}|L{0.8cm}|}
+		\hline
+		\hline
+		\textbf{Sylwester Kozieja} & 
+		\% & 
+		\textbf{Paula Langkafel} & \%\\
+		\hline
+		\hline
+		Oprogramowanie zewnętrznej pamięci Flash		& &	
+		Opracowanie kryteriów wykrywania alarmu &\\
+		\hline
+		Implementacja opracowanych rozwiązań wykrywania alarmu  & &
+		Wykonanie testów urządzenia &\\
+		\hline
+	\end{tabular}
+	\caption{Podział pracy -- Etap III}
+	\label{tab:PodzialPracyEtap3}
+\end{table}
+
+
+\newpage
+%\section{Literatura}
+%\begin{enumerate}
+%\item Vehicle Tracker wih a GPS and Accelerometer Sensor System in Jakarta - Suryadiputra Liawatimena, Jimmy Linggarjati
+%\item UM1928 User manual - Getting started with STM32L476G discovery kit software development tools \\ \url{https://www.st.com/content/ccc/resource/technical/document/user_manual/c8/6c/20/e4/8c/3c/4d/13/DM00217936.pdf/files/DM00217936.pdf/jcr:content/translations/en.DM00217936.pdf}
+%\item Quantitative Accelerated Life Testing of MEMS Accelerometers - Marius Bazu, Lucian Galateanu, Virgil Emil Ilian, Jerome Loicq, Serge Habraken,
+%Jean-Paul Collette
+%\item Overview of ST-LINK derivatives \\ \url{https://www.st.com/content/ccc/resource/technical/document/technical_note/group0/30/c8/1d/0f/15/62/46/ef/DM00290229/files/DM00290229.pdf/jcr:content/translations/en.DM00290229.pdf}
+%\item 
+
+%\end{enumerate}
+
+\nocite{*}
+\addcontentsline{toc}{section}{Bibilografia}
+\bibliography{bibliografia}
+\bibliographystyle{plabbrv}
+
+
+
+\end{document}
+
+
+
