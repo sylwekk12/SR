@@ -82,6 +82,125 @@
 Celem projektu jest stworzenie urządzenia, które poprzez komunikację z akcelerometrem wykrywa niepożądany ruch. Użytkownik będzie miał możliwość wybrania sposobu otrzymywania komunikatów. Jednym z założeń projektu jest wybór opcjonalnego interfejsu audio. Urządzenia ma zawierać menu dające możliwość podstawowej konfiguracji, takiej jak załączenie alarmu i wybór sposobu komunikowania się oraz ustawianie poziomu załączania alarmu. Dodatkową opcją jest wizualizowanie poziomu rejestrowanych przyspieszeń. \\ 
 Na zakres prac składa się oprogramowanie zewnętrznej pamięci Flash , skonfigurowanie akcelerometru, a także realizacja komunikacji z interfejsami.
 
+\section{Konfiguracja mikrokontrolera}
+\begin{figure}[H]
+\centering
+\includegraphics[width=13cm]{figures/cub.png}
+\caption{Konfiguracja wyjść mikrokontrolera w programie STM32CubeMx}
+\end{figure}
+\newpage
+
+\begin{figure}[H]
+\includegraphics[width=17cm]{figures/zeg.png}
+\caption{Konfiguracja zegarów mikrokontrolera}
+\end{figure}
+\newpage
+
+\subsection{Konfiguracja pinów mikrokontrolera}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+Numer pinu & Pin & Tryb pracy & Funkcja/ etykieta \\ \hline
+1&		PE2&		SAI1\_MCLK\_A	&	SAI1\_MCK	\\
+2&		PE3	&	GPIO\_Output		&	AUDIO\_RST\\
+3&		PE4	&	SAI1\_FS\_A			&	SAI1\_FS\\
+4&		PE5	&	SAI1\_SCK\_A		&	SAI1\_SCK\\
+5&		PE6	&	SAI1\_SD\_A	& \\
+15&		PC0	&	GPIO\_Output		&	MAG\_CS\\
+16&		PC1	&	LCD\_SEG19	& \\
+17&		PC2	&	GPIO\_Input	&		MAG\_DRDY\\
+18	&	PC3	&	LCD\_VLCD	& \\
+23&		PA0	&	GPIO\_EXTI0	&		JOY\_CENTER\\
+24	&	PA1	&	GPIO\_EXTI1	&		JOY\_LEFT\\
+25&		PA2	&	GPIO\_EXTI2	&		JOY\_RIGHT\\
+26	&	PA3	&	GPIO\_EXTI3	&		JOY\_UP\\
+30&		PA5	&	GPIO\_EXTI5	&		JOY\_DOWN\\
+31	&	PA6	&	LCD\_SEG3	&	\\
+32	&	PA7	&	LCD\_SEG4	&	\\
+33	&	PC4	&	LCD\_SEG22	&	\\
+34	&	PC5	&	LCD\_SEG23	&	\\
+35	&	PB0	&	LCD\_SEG5	&	\\
+36	&	PB1	&	LCD\_SEG6	&	\\
+37	&	PB2	&	GPIO\_Output	&		LED\_R\\
+38	&	PE7	&	SAI1\_SD\_B	&		AUODIO\_DIN\\
+39	&	PE8	&	GPIO\_Output	&		LED\_G\\
+40	&	PE9*&	SAI1\_FS\_B	&		AOUDIO\_CLK\\
+41	&	PE10&	QUADSPI\_CLK	&		QSPI\_CLK\\
+42	&	PE11&	QUADSPI\_NCS	&		QSPI\_CS\\
+43	&	PE12&	QUADSPI\_BK1\_IO0&		QSPI\_D0\\
+44	&	PE13&	QUADSPI\_BK1\_IO1	&	QSPI\_D1\\
+45	&	PE14&	QUADSPI\_BK1\_IO2	&	QSPI\_D2\\
+46	&	PE15&	QUADSPI\_BK1\_IO3	&	QSPI\_D3\\
+47	&	PB10&	LCD\_SEG10	&\\
+48	&	PB11&	LCD\_SEG11	&\\
+51	&	PB12&	LCD\_SEG12	&\\
+52	&	PB13&	LCD\_SEG13	&\\
+53	&	PB14&	LCD\_SEG14	&\\
+54 &	PB15&	LCD\_SEG15	&\\
+55	&	PD8	&	LCD\_SEG28	&\\
+56	&	PD9	&	LCD\_SEG29	&\\
+57	&	PD10&	LCD\_SEG30	& \\
+58	&	PD11&	LCD\_SEG31	&\\
+59	&	PD12&	LCD\_SEG32	&\\
+60	&	PD13&	LCD\_SEG33	&\\
+61	&	PD14&	LCD\_SEG34	&\\
+62	&	PD15&	LCD\_SEG35	&\\
+63	&	PC6	&	LCD\_SEG24	&\\
+64	&	PC7	&	LCD\_SEG25	&\\
+65	&	PC8	&	LCD\_SEG26	&\\
+66	&	PC9	&	LCD\_SEG27	&\\
+67	&	PA8	&	LCD\_COM0	&\\
+68	&	PA9	&	LCD\_COM1	&\\
+69	&	PA10&	LCD\_COM2	&\\
+77	&	PA15 &	(JTDI) LCD\_SEG17&	\\
+78	&	PC10&	LCD\_SEG40	&\\ \hline
+
+\end{tabular}
+\caption{Konfiguracja pinów mikrokontrolera}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+Numer pinu & Pin & Tryb pracy & Funkcja/ etykieta \\ \hline
+79	&	PC11&	LCD\_SEG41	&\\
+80	&	PC12&	LCD\_SEG42	&\\
+83	&	PD2	&	LCD\_SEG43	&\\
+89	&	PB3 &	(JTDO-TRACESWO)	LCD\_SEG7&\\	
+90	&	PB4 &	(NJTRST)LCD\_SEG8	&\\
+91	&	PB5	&	LCD\_SEG9	&\\
+92	&	PB6	&	I2C1\_SCL	&\\
+93	&	PB7	&	I2C1\_SDA	&\\
+95	&	PB8	&	LCD\_SEG16	&\\
+96	&	PB9	&	LCD\_COM3	&\\
+97	&	PE0	&	GPIO\_Output	&		XL\_CS\\
+98	&	PE1	&	LCD\_SEG37	&\\ \hline
+
+\end{tabular}
+\caption{Konfiguracja pinów mikrokontrolera}
+\end{table}
+
+\subsection{Konfiguracja peryferiów}
+Konfiguracja peryferiów
+\begin{enumerate}
+\item QUADSPI\\
+Interfejs użyty do obsługi pamięci Flash zapewniający dużą przepustowość dzięki czterem liniom danych (PE12:15) oraz dwóm liniom sterującym (PE10 i PE11).
+\item LCD\\
+Interfejs wyświetlacza umożliwiający komunikację z urządzeniem poprzez zaprojektowane menu. Korzysta z dużej ilości pinów, które opisane są na rysunku z konfiguracją. Ustawienia standardowe,parametr Duty Selection ustawiony na 1/4.
+\item GPIO \\
+Prosty interfejs do sterowania cyfrowymi wejściami/wyjściami. Użyty do obsługi LED i joystick'a. 5 pinów dla joystick'a (PA0:3 i PA5) oraz pin dla diody LED (PB2).
+\item I2C\\
+//Coś tu mamy? akcelerometr
+\item SAI\\
+Interfejs do obsługi wyjścia audio.
+\item MEMS\\
+albo tu akcelerometr
+\end{enumerate}
+
+\section{Urządzenia zewnętrzne}
+\subsection{Akcelerometr -- LSM303C}
 
 \section{Założenia projektowe}
 \begin{enumerate}
@@ -135,13 +254,10 @@ Oboje uczestnicy projektu zajmą się wstępną konfiguracją peryferiów odbywa
 		Wstępna konfiguracja peryferiów w programie CubeMx		& &	
 		Wstępna konfiguracja peryferiów w programie CubeMx &\\
 		\hline
-		Implementacja obsługi pamięci Flash & &
+		Wstępny projekt menu& &
 		Implementacja obsługi akcelerometru &\\
-		\hline
-		Opracowanie sposobu przechowywania danych na zewnętrznej pamięci FLASH & &
-		Wstępny projekt menu  & \\
-		\hline
-		Sygnalizacja audiowizualna za pomocą Audio DAC oraz diody LED & & Konfiguracja zegara RTC &\\
+		
+		\hline Konfiguracja zegara RTC & & &\\
 		\hline
 	\end{tabular}
 	\caption{Podział pracy -- Etap II}
@@ -158,11 +274,13 @@ Oboje uczestnicy projektu zajmą się wstępną konfiguracją peryferiów odbywa
 		\textbf{Paula Langkafel} & \%\\
 		\hline
 		\hline
-		Oprogramowanie zewnętrznej pamięci Flash		& &	
+		Oprogramowanie zewnętrznej pamięci Flash oraz opracowanie sposobu przechowywania danych		& &	
 		Opracowanie kryteriów wykrywania alarmu &\\
 		\hline
 		Implementacja opracowanych rozwiązań wykrywania alarmu  & &
 		Wykonanie testów urządzenia &\\
+		\hline
+		Sygnalizacja audiowizualna za pomocą Audio DAC oraz diody LED & & &\\
 		\hline
 	\end{tabular}
 	\caption{Podział pracy -- Etap III}
