@@ -183,6 +183,74 @@ Numer pinu & Pin & Tryb pracy & Funkcja/ etykieta \\ \hline
 \end{table}
 
 \subsection{Konfiguracja peryferiów}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+Peryferia	&MODES&	FUNCTIONS	&PINS\\ \hline
+I2C1&	I2C&	I2C1\_SCL&	PB6\\
+I2C1&	I2C&	I2C1\_SDA&	PB7\\
+LCD&	1/4 Duty Cycle&	LCD\_VLCD&	PC3\\
+LCD&	1/4 Duty Cycle&	LCD\_COM0&	PA8\\
+LCD&	1/4 Duty Cycle&	LCD\_COM1&	PA9\\
+LCD&	1/4 Duty Cycle&	LCD\_COM2&	PA10\\
+LCD&	1/4 Duty Cycle&	LCD\_COM3&	PB9\\
+LCD&	SEG3&	LCD\_SEG3&	PA6\\
+LCD&	SEG4&	LCD\_SEG4&	PA7\\
+LCD&	SEG5&	LCD\_SEG5&	PB0\\
+LCD&	SEG6&	LCD\_SEG6&	PB1\\
+LCD&	SEG7&	LCD\_SEG7&	PB3 (JTDO-TRACESWO)\\
+LCD&	SEG8&	LCD\_SEG8&	PB4 (NJTRST)\\
+LCD&	SEG9&	LCD\_SEG9&	PB5\\
+LCD&	SEG10&	LCD\_SEG10&	PB10\\
+LCD&	SEG11&	LCD\_SEG11&	PB11\\
+LCD&	SEG12&	LCD\_SEG12&	PB1\\
+LCD&	SEG13&	LCD\_SEG13&	PB13\\
+LCD&	SEG14&	LCD\_SEG14&	PB14\\
+LCD&	SEG15&	LCD\_SEG15&	PB15\\
+LCD&	SEG16&	LCD\_SEG16&	PB8\\
+LCD&	SEG17&	LCD\_SEG17&	PA15 (JTDI)\\
+LCD&	SEG19&	LCD\_SEG19&	PC1\\
+LCD&	SEG22&	LCD\_SEG22&	PC4\\
+LCD&	SEG23&	LCD\_SEG23&	PC5\\
+LCD&	SEG24&	LCD\_SEG24&	PC6\\
+LCD&	SEG25&	LCD\_SEG25&	PC7\\
+LCD&	SEG26&	LCD\_SEG26&	PC8\\
+LCD&	SEG27&	LCD\_SEG27&	PC9\\
+LCD&	SEG28&	LCD\_SEG28&	PD8\\
+LCD&	SEG29&	LCD\_SEG29&	PD9\\
+LCD&	SEG30&	LCD\_SEG30&	PD10\\
+LCD&	SEG31&	LCD\_SEG31&	PD11\\
+LCD&	SEG32&	LCD\_SEG32&	PD12\\
+LCD&	SEG33&	LCD\_SEG33&	PD13\\
+LCD&	SEG34&	LCD\_SEG34&	PD14\\
+LCD&	SEG35&	LCD\_SEG35&	PD15\\
+LCD&	SEG37&	LCD\_SEG37&	PE1\\
+LCD&	SEG40&	LCD\_SEG40&	PC10\\
+LCD&	SEG41&	LCD\_SEG41&	PC11\\
+LCD&	SEG42&	LCD\_SEG42&	PC12\\
+LCD&	SEG43&	LCD\_SEG43&	PD2\\
+QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO0&	PE12\\
+QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO1&	PE13\\
+QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO2&	PE14\\
+QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO3&	PE15\\
+QUADSPI&	Quad SPI Line&	QUADSPI\_NCS&	PE11\\
+QUADSPI&	Quad SPI Line&	QUADSPI\_CLK&	PE10\\
+RTC&	Activate RTC Clock Source&	RTC\_VS\_RTC\_Activate&	VP\_RTC\_VS\_RTC\_Activate\\
+RTC&	RTC Enabled&	RTC\_VS\_RTC\_Calendar	&VP\_RTC\_VS\_RTC\_Calendar\\
+SAI1:SAI A&	Master with Master Clock Out&	SAI1\_SD\_A&	PE6\\
+SAI1:SAI A&	Master with Master Clock Out&	SAI1\_SCK\_A&	PE5\\
+SAI1:SAI A&	Master with Master Clock Out&	SAI1\_FS\_A&	PE4\\
+SAI1:SAI A&	Master with Master Clock Out&	SAI1\_MCLK\_A	&PE2\\
+SAI1:SAI B&	SPDIF TX Transmitter (IEC60958)	&SAI1\_SD\_B&
+	PE7\\
+SYS	&	SysTick	SYS\_VS\_Systick&	VP\_SYS\_VS\_Systick& \\
+\hline
+\end{tabular}
+\caption{Tabela z peryferiami}
+\end{table}
+
 Konfiguracja peryferiów
 \begin{enumerate}
 \item QUADSPI\\
@@ -191,12 +259,12 @@ Interfejs użyty do obsługi pamięci Flash zapewniający dużą przepustowość
 Interfejs wyświetlacza umożliwiający komunikację z urządzeniem poprzez zaprojektowane menu. Korzysta z dużej ilości pinów, które opisane są na rysunku z konfiguracją. Ustawienia standardowe,parametr Duty Selection ustawiony na 1/4.
 \item GPIO \\
 Prosty interfejs do sterowania cyfrowymi wejściami/wyjściami. Użyty do obsługi LED i joystick'a. 5 pinów dla joystick'a (PA0:3 i PA5) oraz pin dla diody LED (PB2).
-\item I2C\\
-//Coś tu mamy? akcelerometr
+\item SPI\\
+Akcelerometr, który będzie podstawą projektu, służy do pomiaru przyspieszenia na którym będzie bazowało kryterium stwierdzenia kradzieży.
 \item SAI\\
-Interfejs do obsługi wyjścia audio.
-\item MEMS\\
-albo tu akcelerometr
+Interfejs do obsługi wyjścia audio. Na jego podstawie będzie wysyłany komunikat o rzekomej kradzieży.
+%\item MEMS\\
+%albo tu akcelerometr
 \end{enumerate}
 
 \section{Urządzenia zewnętrzne}
@@ -251,13 +319,13 @@ Oboje uczestnicy projektu zajmą się wstępną konfiguracją peryferiów odbywa
 		\textbf{Paula Langkafel} & \%\\
 		\hline
 		\hline
-		Wstępna konfiguracja peryferiów w programie CubeMx		& &	
-		Wstępna konfiguracja peryferiów w programie CubeMx &\\
+		Wstępna konfiguracja peryferiów w programie CubeMx		& 100\%&	
+		Wstępna konfiguracja peryferiów w programie CubeMx &100\%\\
 		\hline
-		Wstępny projekt menu& &
-		Implementacja obsługi akcelerometru &\\
+		Wstępny projekt menu& 100\%&
+		Implementacja obsługi akcelerometru &70\%\\
 		
-		\hline Konfiguracja zegara RTC & & &\\
+		\hline Konfiguracja zegara RTC & 100\%& &\\
 		\hline
 	\end{tabular}
 	\caption{Podział pracy -- Etap II}
@@ -287,7 +355,28 @@ Oboje uczestnicy projektu zajmą się wstępną konfiguracją peryferiów odbywa
 	\label{tab:PodzialPracyEtap3}
 \end{table}
 
+\section{Podsumowanie etapu II}
+\subsection{Akcelerometr}
+Z niewiadomych przyczyn akcelerometr nie działa, na wyjściu mamy do czynienia z wartością 255, czyli maksimum zakresu. Próby oprogramowania były zgodne z dokumentacją, komunikacja odbywa się w trybie half duplex master. Piny dotyczące innych peryferiów w pewien sposób związanych z używanymi zostały wprowadzone w stan wysoki.
+\subsection{Wyświetlacz z menu i zegarem RTC}
+Pierwszy commit miał na celu stworzenie pierwszego prostego programu, który sprawdzał komunikację z diodami LED oraz wyświetlaczem.
+W drugim commicie zostało zaimplementowane menu wraz z podstawowymi opcjami i zegar RTC będący podstawą do obliczania czasu co jest niezbędne do umiejscowienia alarmu w czasie. Urządzenie inicjowane jest stałą datą i godziną, ale istnieje możliwość ustawienia czasu w menu. Również w menu można ustawić flagi aktywność sygnalizacji alarmu dźwiękiem i diodą.
+\subsection{Opis menu}
 
+Opcje menu:
+\begin {itemize}
+\item Start - uruchamia procedurę rejstrowania alarmów*
+\item Ustaw godzinę
+\item Ustaw datę
+\item Audio - ustawienie sygnalizacji alarmu przez sygnał Audio
+\item LED -ustawienie sygnalizacji alarmu diodą LED
+\item Wyświetl alarmy - pobiera z pamięci zarejstrowane alarmy i wyświetla w postaci listy*
+
+\end {itemize}
+
+*nieoporgromawana funkcjonalność
+
+\
 \newpage
 %\section{Literatura}
 %\begin{enumerate}
