@@ -52,17 +52,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-#define LSM303_ACC_ADDRESS (0x1D << 1) // adres akcelerometru: 0011 001x
-#define LSM303_ACC_CTRL_REG1_A 0x20 // rejestr ustawien 1
-
-// CTRL_REG1_A = [HR][ODR2][ODR1][ODR0][BDU][ZEN][YEN][XEN]
-#define LSM303_ACC_Z_ENABLE 0x07 // 0000 0100
-#define LSM303_ACC_100HZ 0x38 // 0011 0000
-#define LSM303_ACC_Z_H_A 0x2D // wyzszy bajt danych osi Z
-
-// wypelnienie zmiennej konfiguracyjnej odpowiednimi opcjami
-uint8_t Settings = LSM303_ACC_Z_ENABLE | LSM303_ACC_100HZ;
-
 
 /* USER CODE END PV */
 
@@ -76,23 +65,15 @@ void MX_USB_HOST_Process(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t spiTxBuf[2];//tablica danych wysylanych do urzadzenia
-uint8_t spiRxBuf[2];//tablica danych odbieranych z urzadzenia
-uint8_t spiTxBuf23[2];//tablica dla CTRL_REG4_A
-//uint8_t Data = 0; // Zmienna do bezposredniego odczytu z akcelerometru
-//int16_t Zaxis = 0; // Zawiera przeksztalcona forme odczytanych danych
+uint8_t spiTxBuf[2];//tablica danych wysylanych do urzadzenia X
+uint8_t spiTxBufy[2];//tablica danych wysylanych do urzadzenia Y
+uint8_t spiTxBufz[2];//tablica danych wysylanych do urzadzenia Z
 
-//SPI_HandleTypeDef spi;
-/*
-void mcp_write_reg(uint8_t addr, uint8_t value)
-{
- uint8_t tx_buf[] = { LSM303_ACC_ADDRESS , addr, value };
+uint8_t spiRxBufy[2];//tablica danych odbieranych z urzadzenia Y
+uint8_t spiRxBuf[2];//tablica danych odbieranych z urzadzenia X
+uint8_t spiRxBufz[2];//tablica danych odbieranych z urzadzenia Z
 
- HAL_GPIO_WritePin(GPIOE, GPIO_PIN_0, GPIO_PIN_RESET);
- HAL_SPI_TransmitReceive(&spi, tx_buf, &Data, 3, HAL_MAX_DELAY);
- HAL_GPIO_WritePin(GPIOE, GPIO_PIN_0, GPIO_PIN_SET);
-}
-*/
+
 /* USER CODE END 0 */
 
 /**
@@ -101,29 +82,8 @@ void mcp_write_reg(uint8_t addr, uint8_t value)
   */
 int main(void)
 {
-
   /* USER CODE BEGIN 1 */
-	//uint8_t to_send;
 
-/*	 spi.Instance = SPI2;
-	 spi.Init.Mode = SPI_MODE_MASTER;
-	 spi.Init.NSS = SPI_NSS_SOFT;
-	 spi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8; // 1MHz
-	 spi.Init.Direction = SPI_DIRECTION_2LINES;
-	 spi.Init.CLKPhase = SPI_PHASE_1EDGE;
-	 spi.Init.CLKPolarity = SPI_POLARITY_LOW;
-	 spi.Init.DataSize = SPI_DATASIZE_8BIT;
-	 spi.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	 spi.Init.TIMode = SPI_TIMODE_DISABLE;
-	 spi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	 spi.Init.CRCPolynomial = 7;
-	HAL_SPI_Init(&spi);
-
-	__HAL_SPI_ENABLE(&spi);
-
-	 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_0, GPIO_PIN_RESET);
-	 //spi_sendrecv(0x40);
-	 HAL_GPIO_WritePin(GPIOE, GPIO_PIN_0, GPIO_PIN_SET);*/
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -153,31 +113,38 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USB_HOST_Init();
   /* USER CODE BEGIN 2 */
-  //HAL_I2C_Mem_Write(&hi2c1, LSM303_ACC_ADDRESS, LSM303_ACC_CTRL_REG1_A, 1, &Settings, 1, 100);
-  //uint8_t adr = 0x2D;
 
 
   HAL_GPIO_WritePin(GPIOD,GPIO_PIN_7,GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB,GPIO_PIN_8,GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_2,GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_3,GPIO_PIN_SET);
 
-  HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
-    HAL_Delay(10);
-  //Wysylanie danych do ACC
+
+
   HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
-    spiTxBuf[0] = 0x20; //wlaczenie rejestru numer 1
-    spiTxBuf[1] = 0x11; //wlaczenie na czestotliwosci na ACC i odczyt z osi X
+  spiTxBuf[0] = 0x23;
+  spiTxBuf[1] = 0xFD;
+  HAL_SPI_Transmit(&hspi2,spiTxBuf,2,50);
+  HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
+  spiTxBuf[0] = 0x23|0x80;
+  HAL_SPI_Transmit(&hspi2,spiTxBuf,1,50);
+  __HAL_SPI_DISABLE(&hspi2);
+  HAL_SPI_Receive(&hspi2,spiRxBuf,1,50);
+  HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+
+  HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
+    spiTxBuf[0] = 0x20;
+    spiTxBuf[1] = 0x4F;
     HAL_SPI_Transmit(&hspi2,spiTxBuf,2,50);
-    spiTxBuf23[0] = 0x23;
-    spiTxBuf23[1] = 0x01;
-    HAL_SPI_Transmit(&hspi2,spiTxBuf23,2,50);
     HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
-
-
-   //Odczyt danych z ACC
-   HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
-   spiTxBuf[0] = 0x20|0x80; //wlaczenie odczytywanie, ustawienie Most Significant Bit to High
-   HAL_SPI_Transmit(&hspi2,spiTxBuf,1,50);
-   HAL_SPI_Receive(&hspi2,spiRxBuf,1,50);
-   HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
+    spiTxBuf[0] = 0x20|0x80;
+    HAL_SPI_Transmit(&hspi2,spiTxBuf,1,50);
+    __HAL_SPI_DISABLE(&hspi2);
+    HAL_SPI_Receive(&hspi2,spiRxBuf,1,50);
+    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
 
 
   /* USER CODE END 2 */
@@ -186,26 +153,35 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-/*	  HAL_I2C_Mem_Read(&hi2c1, LSM303_ACC_ADDRESS, (LSM303_ACC_Z_H_A), 1, &Data, 1, 100);
-	  Zaxis = Data << 8;*/
+
     /* USER CODE END WHILE */
-	 /* HAL_SPI_TransmitReceive(&spi, &adr, &Data, 3, HAL_MAX_DELAY);
-	  Zaxis = Data << 8;*/
-	  MX_USB_HOST_Process();
+    MX_USB_HOST_Process();
 
     /* USER CODE BEGIN 3 */
-	  //to_send = 0x8F;
+
 	  //Odczyt danych z ACC
 
+    	HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
+        spiTxBuf[0] = 0x29|0x80;
+        HAL_SPI_Transmit(&hspi2,spiTxBuf,1,50);
+        __HAL_SPI_DISABLE(&hspi2);
+        HAL_SPI_Receive(&hspi2,spiRxBuf,1,50);
+        HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
 
-	        HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
-	        spiTxBuf[0] = 0x29|0x80; //wlaczenie odczyt z X na High
-	       // HAL_SPI_Transmit(&hspi2,&to_send,1,50);
-	        HAL_SPI_Transmit(&hspi2,spiTxBuf,1,50);
-	        HAL_SPI_Receive(&hspi2,spiRxBuf,1,50);
-	        HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
+        spiTxBufy[0] = 0x2B|0x80;
+        HAL_SPI_Transmit(&hspi2,spiTxBufy,1,50);
+        __HAL_SPI_DISABLE(&hspi2);
+        HAL_SPI_Receive(&hspi2,spiRxBufy,1,50);
+        HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
 
-	        HAL_Delay(300);
+        HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
+        spiTxBufz[0] = 0x2D|0x80;
+        HAL_SPI_Transmit(&hspi2,spiTxBufz,1,50);
+        __HAL_SPI_DISABLE(&hspi2);
+        HAL_SPI_Receive(&hspi2,spiRxBufz,1,50);
+        HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+        HAL_Delay(300);
 
 
   }
