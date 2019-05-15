@@ -9,10 +9,6 @@
 
 extern SPI_HandleTypeDef hspi2;
 
-uint8_t min(uint8_t a, uint8_t b)
-{
-	return (a < b ? a : b);
-}
 
 uint8_t spiTxBufx[2];//tablica danych wysylanych do urzadzenia X
 uint8_t spiTxBufy[2];//tablica danych wysylanych do urzadzenia Y

@@ -84,6 +84,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+uint8_t min(uint8_t a, uint8_t b)
+{
+	return (a < b ? a : b);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -132,6 +137,11 @@ int main(void)
   char x[4];
 
   x[4] = '\0';
+
+  AKC_Pomiar();
+  uint8_t t_minus_jeden;
+
+  uint8_t rozniczkujemy;
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -144,8 +154,10 @@ int main(void)
 	//  strcpy(x,"\0\0\0\0");
 	  BSP_LCD_GLASS_Clear();
 
+	  t_minus_jeden = spiRxBufx[0];
 	  AKC_Pomiar();
-	  itoa(spiRxBufx[0],x,10);
+	  rozniczkujemy = min(spiRxBufx[0] - t_minus_jeden, t_minus_jeden - spiRxBufx[0]);
+	  itoa(rozniczkujemy,x,10);
 
 	  BSP_LCD_GLASS_DisplayString(x);
 
