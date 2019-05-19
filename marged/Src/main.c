@@ -23,6 +23,7 @@
 
 #include "menu.h"
 #include "myTime.h"
+#include <math.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -38,7 +39,9 @@
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
-extern uint8_t spiRxBufx[2];
+extern int8_t spiRxBufx[2];
+extern int8_t spiRxBufy[2];
+extern int8_t spiRxBufz[2];
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
@@ -140,6 +143,7 @@ int main(void)
 
   AKC_Pomiar();
   uint8_t t_minus_jeden;
+  uint8_t t_0;
 
   uint8_t rozniczkujemy;
   /* Infinite loop */
@@ -154,9 +158,11 @@ int main(void)
 	//  strcpy(x,"\0\0\0\0");
 	  BSP_LCD_GLASS_Clear();
 
-	  t_minus_jeden = spiRxBufx[0];
+	  t_minus_jeden = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]*spiRxBufy[0] + spiRxBufz[0] * spiRxBufz[0]);
 	  AKC_Pomiar();
-	  rozniczkujemy = min(spiRxBufx[0] - t_minus_jeden, t_minus_jeden - spiRxBufx[0]);
+	//  rozniczkujemy = min(spiRxBufx[0] - t_minus_jeden, t_minus_jeden - spiRxBufx[0]);
+	  t_0 = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]*spiRxBufy[0] + spiRxBufz[0] * spiRxBufz[0]);
+	  rozniczkujemy = min(t_0 - t_minus_jeden, t_minus_jeden - t_0);
 	  itoa(rozniczkujemy,x,10);
 
 	  BSP_LCD_GLASS_DisplayString(x);
