@@ -89,6 +89,8 @@ uint8_t min(uint8_t a, uint8_t b)
 	return (a < b ? a : b);
 }
 
+uint8_t t_minus_jeden;
+
 /* USER CODE END 0 */
 
 /**
@@ -139,10 +141,10 @@ int main(void)
   x[4] = '\0';
 
   AKC_Pomiar();
-  uint8_t t_minus_jeden;
 
   uint8_t rozniczkujemy;
   /* Infinite loop */
+
   /* USER CODE BEGIN WHILE */
   while (1)
   {

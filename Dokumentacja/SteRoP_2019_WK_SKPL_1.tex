@@ -101,7 +101,7 @@ Na zakres prac składa się oprogramowanie zewnętrznej pamięci Flash , skonfig
 \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
-Numer pinu & Pin & Tryb pracy & Funkcja/ etykieta \\ \hline
+\textbf{Numer pinu} & \textbf{Pin} & \textbf{Tryb pracy} & \textbf{Funkcja/ etykieta} \\ \hline \hline
 1&		PE2&		SAI1\_MCLK\_A	&	SAI1\_MCK	\\
 2&		PE3	&	GPIO\_Output		&	AUDIO\_RST\\
 3&		PE4	&	SAI1\_FS\_A			&	SAI1\_FS\\
@@ -164,7 +164,7 @@ Numer pinu & Pin & Tryb pracy & Funkcja/ etykieta \\ \hline
 \centering
 \begin{tabular}{|l|l|l|l|}
 \hline
-Numer pinu & Pin & Tryb pracy & Funkcja/ etykieta \\ \hline
+\textbf{Numer pinu} & \textbf{Pin} & \textbf{Tryb pracy} & \textbf{Funkcja/ etykieta} \\ \hline \hline
 79	&	PC11&	LCD\_SEG41	&\\
 80	&	PC12&	LCD\_SEG42	&\\
 83	&	PD2	&	LCD\_SEG43	&\\
@@ -177,98 +177,206 @@ Numer pinu & Pin & Tryb pracy & Funkcja/ etykieta \\ \hline
 96	&	PB9	&	LCD\_COM3	&\\
 97	&	PE0	&	GPIO\_Output	&		XL\_CS\\
 98	&	PE1	&	LCD\_SEG37	&\\ \hline
-
 \end{tabular}
 \caption{Konfiguracja pinów mikrokontrolera}
 \end{table}
 
-\subsection{Konfiguracja peryferiów}
+%\subsection{Konfiguracja peryferiów}
+%\begin{table}[H]
+%\centering
+%\begin{tabular}{|l|l|l|l|}
+%\hline
+%Peryferia	&MODES&	FUNCTIONS	&PINS\\ \hline
+%I2C1&	I2C&	I2C1\_SCL&	PB6\\
+%I2C1&	I2C&	I2C1\_SDA&	PB7\\
+%LCD&	1/4 Duty Cycle&	LCD\_VLCD&	PC3\\
+%LCD&	1/4 Duty Cycle&	LCD\_COM0&	PA8\\
+%LCD&	1/4 Duty Cycle&	LCD\_COM1&	PA9\\
+%LCD&	1/4 Duty Cycle&	LCD\_COM2&	PA10\\
+%LCD&	1/4 Duty Cycle&	LCD\_COM3&	PB9\\
+%LCD&	SEG3&	LCD\_SEG3&	PA6\\
+%LCD&	SEG4&	LCD\_SEG4&	PA7\\
+%LCD&	SEG5&	LCD\_SEG5&	PB0\\
+%LCD&	SEG6&	LCD\_SEG6&	PB1\\
+%LCD&	SEG7&	LCD\_SEG7&	PB3 (JTDO-TRACESWO)\\
+%LCD&	SEG8&	LCD\_SEG8&	PB4 (NJTRST)\\
+%LCD&	SEG9&	LCD\_SEG9&	PB5\\
+%LCD&	SEG10&	LCD\_SEG10&	PB10\\
+%LCD&	SEG11&	LCD\_SEG11&	PB11\\
+%LCD&	SEG12&	LCD\_SEG12&	PB1\\
+%LCD&	SEG13&	LCD\_SEG13&	PB13\\
+%LCD&	SEG14&	LCD\_SEG14&	PB14\\
+%LCD&	SEG15&	LCD\_SEG15&	PB15\\
+%LCD&	SEG16&	LCD\_SEG16&	PB8\\
+%LCD&	SEG17&	LCD\_SEG17&	PA15 (JTDI)\\
+%LCD&	SEG19&	LCD\_SEG19&	PC1\\
+%LCD&	SEG22&	LCD\_SEG22&	PC4\\
+%LCD&	SEG23&	LCD\_SEG23&	PC5\\
+%LCD&	SEG24&	LCD\_SEG24&	PC6\\
+%LCD&	SEG25&	LCD\_SEG25&	PC7\\
+%LCD&	SEG26&	LCD\_SEG26&	PC8\\
+%LCD&	SEG27&	LCD\_SEG27&	PC9\\
+%LCD&	SEG28&	LCD\_SEG28&	PD8\\
+%LCD&	SEG29&	LCD\_SEG29&	PD9\\
+%LCD&	SEG30&	LCD\_SEG30&	PD10\\
+%LCD&	SEG31&	LCD\_SEG31&	PD11\\
+%LCD&	SEG32&	LCD\_SEG32&	PD12\\
+%LCD&	SEG33&	LCD\_SEG33&	PD13\\
+%LCD&	SEG34&	LCD\_SEG34&	PD14\\
+%LCD&	SEG35&	LCD\_SEG35&	PD15\\
+%LCD&	SEG37&	LCD\_SEG37&	PE1\\
+%LCD&	SEG40&	LCD\_SEG40&	PC10\\
+%LCD&	SEG41&	LCD\_SEG41&	PC11\\
+%LCD&	SEG42&	LCD\_SEG42&	PC12\\
+%LCD&	SEG43&	LCD\_SEG43&	PD2\\
+%QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO0&	PE12\\
+%QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO1&	PE13\\
+%QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO2&	PE14\\
+%QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO3&	PE15\\
+%QUADSPI&	Quad SPI Line&	QUADSPI\_NCS&	PE11\\
+%QUADSPI&	Quad SPI Line&	QUADSPI\_CLK&	PE10\\
+%RTC&	Activate RTC Clock Source&	RTC\_VS\_RTC\_Activate&	VP\_RTC\_VS\_RTC\_Activate\\
+%RTC&	RTC Enabled&	RTC\_VS\_RTC\_Calendar	&VP\_RTC\_VS\_RTC\_Calendar\\
+%SAI1:SAI A&	Master with Master Clock Out&	SAI1\_SD\_A&	PE6\\
+%SAI1:SAI A&	Master with Master Clock Out&	SAI1\_SCK\_A&	PE5\\
+%SAI1:SAI A&	Master with Master Clock Out&	SAI1\_FS\_A&	PE4\\
+%SAI1:SAI A&	Master with Master Clock Out&	SAI1\_MCLK\_A	&PE2\\
+%SAI1:SAI B&	SPDIF TX Transmitter (IEC60958)	&SAI1\_SD\_B&
+%	PE7\\
+%SYS	&	SysTick	SYS\_VS\_Systick&	VP\_SYS\_VS\_Systick& \\
+%\hline
+%\end{tabular}
+%\caption{Tabela z peryferiami}
+%\end{table}
+
+%\begin{enumerate}
+\subsection{QUADSPI}
+Interfejs użyty do obsługi pamięci Flash zapewniający dużą przepustowość dzięki czterem liniom danych (PE12:15) oraz dwóm liniom sterującym (PE10 i PE11).
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Parametr} & Wartość \\
+\hline
+\hline
+\textbf{Clock Prescaler} & 255\\ \hline
+\textbf{Fifo Threshold} & 1\\ \hline
+\textbf{Sample Shifting} & No Sample Shifting \\ \hline
+\textbf{Flash Size} & 1 \\ \hline
+\textbf{Chip Select High Time} & 1 Cycle \\ \hline
+\textbf{Clock Mode} & Low \\ \hline
+\end{tabular}
+\end{table}
+
+
+\subsection{LCD}
+Interfejs wyświetlacza umożliwiający komunikację z urządzeniem poprzez zaprojektowane menu. Korzysta z dużej ilości pinów, które opisane są na rysunku z konfiguracją. Ustawienia standardowe,parametr Duty Selection ustawiony na 1/4.
 
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|c|}
 \hline
-Peryferia	&MODES&	FUNCTIONS	&PINS\\ \hline
-I2C1&	I2C&	I2C1\_SCL&	PB6\\
-I2C1&	I2C&	I2C1\_SDA&	PB7\\
-LCD&	1/4 Duty Cycle&	LCD\_VLCD&	PC3\\
-LCD&	1/4 Duty Cycle&	LCD\_COM0&	PA8\\
-LCD&	1/4 Duty Cycle&	LCD\_COM1&	PA9\\
-LCD&	1/4 Duty Cycle&	LCD\_COM2&	PA10\\
-LCD&	1/4 Duty Cycle&	LCD\_COM3&	PB9\\
-LCD&	SEG3&	LCD\_SEG3&	PA6\\
-LCD&	SEG4&	LCD\_SEG4&	PA7\\
-LCD&	SEG5&	LCD\_SEG5&	PB0\\
-LCD&	SEG6&	LCD\_SEG6&	PB1\\
-LCD&	SEG7&	LCD\_SEG7&	PB3 (JTDO-TRACESWO)\\
-LCD&	SEG8&	LCD\_SEG8&	PB4 (NJTRST)\\
-LCD&	SEG9&	LCD\_SEG9&	PB5\\
-LCD&	SEG10&	LCD\_SEG10&	PB10\\
-LCD&	SEG11&	LCD\_SEG11&	PB11\\
-LCD&	SEG12&	LCD\_SEG12&	PB1\\
-LCD&	SEG13&	LCD\_SEG13&	PB13\\
-LCD&	SEG14&	LCD\_SEG14&	PB14\\
-LCD&	SEG15&	LCD\_SEG15&	PB15\\
-LCD&	SEG16&	LCD\_SEG16&	PB8\\
-LCD&	SEG17&	LCD\_SEG17&	PA15 (JTDI)\\
-LCD&	SEG19&	LCD\_SEG19&	PC1\\
-LCD&	SEG22&	LCD\_SEG22&	PC4\\
-LCD&	SEG23&	LCD\_SEG23&	PC5\\
-LCD&	SEG24&	LCD\_SEG24&	PC6\\
-LCD&	SEG25&	LCD\_SEG25&	PC7\\
-LCD&	SEG26&	LCD\_SEG26&	PC8\\
-LCD&	SEG27&	LCD\_SEG27&	PC9\\
-LCD&	SEG28&	LCD\_SEG28&	PD8\\
-LCD&	SEG29&	LCD\_SEG29&	PD9\\
-LCD&	SEG30&	LCD\_SEG30&	PD10\\
-LCD&	SEG31&	LCD\_SEG31&	PD11\\
-LCD&	SEG32&	LCD\_SEG32&	PD12\\
-LCD&	SEG33&	LCD\_SEG33&	PD13\\
-LCD&	SEG34&	LCD\_SEG34&	PD14\\
-LCD&	SEG35&	LCD\_SEG35&	PD15\\
-LCD&	SEG37&	LCD\_SEG37&	PE1\\
-LCD&	SEG40&	LCD\_SEG40&	PC10\\
-LCD&	SEG41&	LCD\_SEG41&	PC11\\
-LCD&	SEG42&	LCD\_SEG42&	PC12\\
-LCD&	SEG43&	LCD\_SEG43&	PD2\\
-QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO0&	PE12\\
-QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO1&	PE13\\
-QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO2&	PE14\\
-QUADSPI&	Quad SPI Line&	QUADSPI\_BK1\_IO3&	PE15\\
-QUADSPI&	Quad SPI Line&	QUADSPI\_NCS&	PE11\\
-QUADSPI&	Quad SPI Line&	QUADSPI\_CLK&	PE10\\
-RTC&	Activate RTC Clock Source&	RTC\_VS\_RTC\_Activate&	VP\_RTC\_VS\_RTC\_Activate\\
-RTC&	RTC Enabled&	RTC\_VS\_RTC\_Calendar	&VP\_RTC\_VS\_RTC\_Calendar\\
-SAI1:SAI A&	Master with Master Clock Out&	SAI1\_SD\_A&	PE6\\
-SAI1:SAI A&	Master with Master Clock Out&	SAI1\_SCK\_A&	PE5\\
-SAI1:SAI A&	Master with Master Clock Out&	SAI1\_FS\_A&	PE4\\
-SAI1:SAI A&	Master with Master Clock Out&	SAI1\_MCLK\_A	&PE2\\
-SAI1:SAI B&	SPDIF TX Transmitter (IEC60958)	&SAI1\_SD\_B&
-	PE7\\
-SYS	&	SysTick	SYS\_VS\_Systick&	VP\_SYS\_VS\_Systick& \\
+\textbf{Parametr} & Wartość \\
 \hline
+\hline
+\textbf{Clock Prescaler} & 1 \\ \hline
+\textbf{Clock Divider} & 16\\ \hline
+\textbf{Duty Selection} & 1/4\\ \hline
+\textbf{Bias Selector} & 1/4\\ \hline
+\textbf{Multiplex mode} & Disable\\ \hline
+\textbf{Voltage Source Selection} & Internal\\ \hline
+\textbf{Contrast Control} & 2.60V\\ \hline
+\textbf{Dead Time Duration} & No dead Time\\ \hline
+\textbf{High Drive} & Disable\\ \hline
+\textbf{Pulse ON Duration} & 0 pulse\\ \hline
+\textbf{Blink Mode} & Disabled\\ \hline
+\textbf{Blink Frequency} & fLCD/8\\ \hline
+
 \end{tabular}
-\caption{Tabela z peryferiami}
 \end{table}
 
-Konfiguracja peryferiów
-\begin{enumerate}
-\item QUADSPI\\
-Interfejs użyty do obsługi pamięci Flash zapewniający dużą przepustowość dzięki czterem liniom danych (PE12:15) oraz dwóm liniom sterującym (PE10 i PE11).
-\item LCD\\
-Interfejs wyświetlacza umożliwiający komunikację z urządzeniem poprzez zaprojektowane menu. Korzysta z dużej ilości pinów, które opisane są na rysunku z konfiguracją. Ustawienia standardowe,parametr Duty Selection ustawiony na 1/4.
-\item GPIO \\
+\subsection{GPIO}
 Prosty interfejs do sterowania cyfrowymi wejściami/wyjściami. Użyty do obsługi LED i joystick'a. 5 pinów dla joystick'a (PA0:3 i PA5) oraz pin dla diody LED (PB2).
-\item SPI\\
+
+\subsection{SPI}
 Akcelerometr, który będzie podstawą projektu, służy do pomiaru przyspieszenia na którym będzie bazowało kryterium stwierdzenia kradzieży.
-\item SAI\\
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Parametr} & Wartość \\
+\hline
+\hline
+\textbf{Frame Format} & Motorola \\ \hline
+\textbf{Data Size} & 8 Bits * \\ \hline
+\textbf{First Bit} & MSB First \\ \hline
+\textbf{Prescaler (for Baud Rate)} & 16 * \\ \hline
+\textbf{Baud Rate} & 5.0 MBits/s * \\ \hline
+\textbf{Clock Polarity (CPOL)} & Low \\ \hline
+\textbf{Clock Phase (CPHA)} & 1 Edge \\ \hline
+\textbf{CRC Calculation} & Disabled \\ \hline
+\textbf{NSSP Mode} & Enabled \\ \hline
+\textbf{NSS Signal Type} & Software \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection{SAI}
 Interfejs do obsługi wyjścia audio. Na jego podstawie będzie wysyłany komunikat o rzekomej kradzieży.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Parametr} & Wartość \\
+\hline
+\hline
+\multicolumn{2}{|c|}{SAI A} \\ \hline
+\textbf{Synchronization Inputs} & Asynchronous \\ \hline
+\textbf{Audio Mode} & Master Transmit \\ \hline
+\textbf{Output Mode} & Stereo \\ \hline
+\textbf{Companding Mode} & No companding mode \\ \hline
+\textbf{SAI SD Line Output Mode} & Driven \\ \hline
+\textbf{Protocol} & I2S Standard \\ \hline
+\textbf{Data Size} & 16 Bits \\ \hline
+\textbf{Number of Slots (only Even Values)} & 2 \\ \hline
+\textbf{Master Clock Divider} & Enabled \\ \hline
+\textbf{Audio Frequency} & 192 KHz \\ \hline
+\textbf{Real Audio Frequency} & 35.714 KHz * \\ \hline
+\textbf{Error between Selected} & -81.39 \% * \\ \hline
+\textbf{Fifo Threshold} & Empty \\ \hline
+\textbf{Output Drive} & Disabled \\ \hline
+\multicolumn{2}{|c|}{SAI B} \\ \hline
+\textbf{Synchronization Inputs} & Asynchronous \\ \hline
+\textbf{Protocol} & SPDIF \\ \hline
+\textbf{Audio Mode} & Master Transmit \\ \hline
+\textbf{Output Mode} & Stereo \\ \hline
+\textbf{Companding Mode} & No companding mode \\ \hline
+\textbf{Audio Frequency} & 48 KHz \\ \hline
+\textbf{Real Audio Frequency} & 142.857 KHz * \\ \hline
+\textbf{Fifo Threshold} & Empty \\ \hline
+\textbf{Output Drive} & Disabled \\ \hline
+\end{tabular}
+\end{table}
 %\item MEMS\\
 %albo tu akcelerometr
-\end{enumerate}
+%\end{enumerate}
 
 \section{Urządzenia zewnętrzne}
 \subsection{Akcelerometr -- LSM303C}
+Akcelerometr został wykorzystany do pomiaru przyspieszenia liniowego na tej postawie określano czy załączyć alarm.
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|}
+\hline 
+\textbf{Rejestr} &\textbf{Wartość} \\ \hline \hline
+CTRL\_REG4\_A (0x23) & 0xFD \\ \hline
+CTRL\_REG1\_A (0x20) & 0x4F \\ \hline
+
+\end{tabular}
+\end{table}
+
+\section{Opis działania programu}
+
 
 \section{Założenia projektowe}
 \begin{enumerate}
@@ -319,13 +427,13 @@ Oboje uczestnicy projektu zajmą się wstępną konfiguracją peryferiów odbywa
 		\textbf{Paula Langkafel} & \%\\
 		\hline
 		\hline
-		Wstępna konfiguracja peryferiów w programie CubeMx		& 100\%&	
-		Wstępna konfiguracja peryferiów w programie CubeMx &100\%\\
+		Wstępna konfiguracja peryferiów w programie CubeMx		& &	
+		Wstępna konfiguracja peryferiów w programie CubeMx & \\
 		\hline
-		Wstępny projekt menu& 100\%&
-		Implementacja obsługi akcelerometru &70\%\\
+		Wstępny projekt menu& &
+		Implementacja obsługi akcelerometru &\\
 		
-		\hline Konfiguracja zegara RTC & 100\%& &\\
+		\hline Konfiguracja zegara RTC & & &\\
 		\hline
 	\end{tabular}
 	\caption{Podział pracy -- Etap II}
@@ -365,16 +473,15 @@ W drugim commicie zostało zaimplementowane menu wraz z podstawowymi opcjami i z
 
 Opcje menu:
 \begin {itemize}
-\item Start - uruchamia procedurę rejstrowania alarmów*
+\item Start - uruchamia procedurę rejestrowania alarmów
 \item Ustaw godzinę
 \item Ustaw datę
 \item Audio - ustawienie sygnalizacji alarmu przez sygnał Audio
 \item LED -ustawienie sygnalizacji alarmu diodą LED
-\item Wyświetl alarmy - pobiera z pamięci zarejstrowane alarmy i wyświetla w postaci listy*
+\item Wyświetl alarmy - pobiera z pamięci zarejestrowane alarmy i wyświetla w postaci listy
 
 \end {itemize}
 
-*nieoporgromawana funkcjonalność
 
 \
 \newpage
