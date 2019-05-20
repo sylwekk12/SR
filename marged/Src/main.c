@@ -92,6 +92,11 @@ uint8_t min(uint8_t a, uint8_t b)
 	return (a < b ? a : b);
 }
 
+uint8_t max(uint8_t a, uint8_t b)
+{
+	return (a > b ? a : b);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -146,6 +151,7 @@ int main(void)
   uint8_t t_0;
 
   uint8_t rozniczkujemy;
+  uint8_t max1;
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -156,22 +162,36 @@ int main(void)
 	//	  PetlaMenu();
 	//  }
 	//  strcpy(x,"\0\0\0\0");
+	  /*
 	  BSP_LCD_GLASS_Clear();
 
 	  t_minus_jeden = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]*spiRxBufy[0] + spiRxBufz[0] * spiRxBufz[0]);
+
 	  AKC_Pomiar();
-	//  rozniczkujemy = min(spiRxBufx[0] - t_minus_jeden, t_minus_jeden - spiRxBufx[0]);
 	  t_0 = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]*spiRxBufy[0] + spiRxBufz[0] * spiRxBufz[0]);
+
+
 	  rozniczkujemy = min(t_0 - t_minus_jeden, t_minus_jeden - t_0);
-	  itoa(rozniczkujemy,x,10);
+
+	  max1 = max(max1,rozniczkujemy);
+	  itoa(max1,x,10);
 
 	  BSP_LCD_GLASS_DisplayString(x);
 
-
-
+*/
+	  if(joy_event == fJOY_CENTER)
+	  {
+	  	  __RESET_JOY(joy_event);
+	  	  PetlaMenu();
+	  }
 
 	  HAL_Delay(100);
-	 // DrawTime(&hrtc);
+	  DrawTime(&hrtc);
+
+
+
+
+
   }
   /* USER CODE END 3 */
 }
@@ -182,18 +202,18 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	switch(GPIO_Pin)
 	{
-	case JOY_DOWN_Pin:
-		joy_event = fJOY_DOWN;
-		break;
 	case JOY_CENTER_Pin:
 		joy_event = fJOY_CENTER;
 		break;
+	case JOY_DOWN_Pin:
+		joy_event = fJOY_DOWN;
+		return;
 	case JOY_LEFT_Pin:
 		joy_event = fJOY_LEFT;
-			break;
+		break;
 	case JOY_RIGHT_Pin:
 		joy_event = fJOY_RIGHT;
-			break;
+		break;
 	case JOY_UP_Pin:
 		joy_event = fJOY_UP;
 		break;
@@ -202,7 +222,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		HAL_GPIO_WritePin(GPIOB,LED_R_Pin,GPIO_PIN_SET);
 	break;
 	}
-
+	return;
 }
 
 /**

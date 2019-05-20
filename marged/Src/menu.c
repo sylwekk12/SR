@@ -8,6 +8,7 @@
 #include "menu.h"
 #include "main.h"
 #include "myTime.h"
+#include "pamiec.h"
 
 enum OStatus oStatus;
 enum Joy_Event joy_event;
@@ -22,24 +23,71 @@ char* SAUDIO = "AUDIO ";
 char* DTime = " WYPISZ GODZ ";
 char* SAlarms = " WYSWIETL ALARMY ";
 
+char* tab[26];
 
+
+char* alarm_to_string(struct alarm* alm)
+{
+	char tmp[8];
+	char table[26];
+	strcat(table,"ALARM ");
+	itoa(alm->hour,tmp,10);strcat(table,tmp);strcat(table,"-");
+	itoa(alm->min, tmp,10);strcat(table,tmp);strcat(table," ");
+	itoa(alm->day, tmp,10);strcat(table,tmp);strcat(table, "-");
+	itoa(alm->month, tmp,10);strcat(table,tmp);strcat(table, "-");
+	itoa(alm->year, tmp,10);strcat(table,tmp);strcat(table, " ");
+	strcpy(tab,table);
+	return tab;
+}
 
 void WyswietlAlarmy() //TODO wczytywanie z flasha i wyswietlanie
 {
+	char* napis;
+	struct alarm alm;
+	uint8_t it = 0;
+
+	alm.day = 10;
+	alm.hour = 21;
+	alm.min = 37;
+	alm.year = 2004;
+	alm.month = 4;
+	alm.sec = 24;
+	zapisz(alm);
+	if(wczytaj(&alm,it) != POK)
+	{
+		BSP_LCD_GLASS_ScrollSentence("  BRAK ALARMOW",1,200);
+		HAL_Delay(5000);
+		__RESET_JOY(joy_event);
+		return;
+	}
+	napis = alarm_to_string(&alm);
+
 	while(joy_event!=fJOY_CENTER&&joy_event!=fJOY_LEFT)
 	{
+
 		switch(joy_event)
 		{
 		case fJOY_UP:
 			__RESET_JOY(joy_event);
+			if(wczytaj(&alm,it-1) == POK)
+			{
+				napis = alarm_to_string(&alm);
+				it-=1;
+			}
 			break;
 		case fJOY_DOWN:
 			__RESET_JOY(joy_event);
+			if(wczytaj(&alm,it+1) == POK)
+			{
+				napis = alarm_to_string(&alm);
+				it+=1;
+			}
 			break;
 		default:
 			break;
 		}
-		BSP_LCD_GLASS_ScrollSentence("READING ALARMS",1,300);
+		//wczytaj();
+		BSP_LCD_GLASS_ScrollSentence(napis,1,500);
 		HAL_Delay(10);
 	}
 	__RESET_JOY(joy_event);

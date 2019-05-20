@@ -21,7 +21,7 @@ int zapisz(struct alarm alm)
 
 int wczytaj(struct alarm* alm, uint32_t index)
 {
-	if(index*BLOK_SIZE > ostatni_adres) return PERROR;
+	if(index*BLOK_SIZE >= ostatni_adres) return PERROR;
 	else {
 		if(BSP_QSPI_Read(alm, index*BLOK_SIZE, ALARM_SIZE)==HAL_ERROR) return PERROR;
 		return POK;
