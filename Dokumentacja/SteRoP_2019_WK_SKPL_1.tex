@@ -91,15 +91,14 @@ Na zakres prac składa się oprogramowanie zewnętrznej pamięci Flash , skonfig
 \newpage
 
 \begin{figure}[H]
-\includegraphics[width=17cm]{figures/zeg.png}
+\includegraphics[width=17cm]{figures/zeg.jpg}
 \caption{Konfiguracja zegarów mikrokontrolera}
 \end{figure}
-\newpage
 
 \subsection{Konfiguracja pinów mikrokontrolera}
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|L{2cm}|L{6cm}|L{4cm}|}
 \hline
 \textbf{Numer pinu} & \textbf{Pin} & \textbf{Tryb pracy} & \textbf{Funkcja/ etykieta} \\ \hline \hline
 1&		PE2&		SAI1\_MCLK\_A	&	SAI1\_MCK	\\
@@ -162,7 +161,7 @@ Na zakres prac składa się oprogramowanie zewnętrznej pamięci Flash , skonfig
 
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|L{2cm}|L{6cm}|L{4cm}|}
 \hline
 \textbf{Numer pinu} & \textbf{Pin} & \textbf{Tryb pracy} & \textbf{Funkcja/ etykieta} \\ \hline \hline
 79	&	PC11&	LCD\_SEG41	&\\
@@ -363,112 +362,137 @@ Interfejs do obsługi wyjścia audio. Na jego podstawie będzie wysyłany komuni
 
 \section{Urządzenia zewnętrzne}
 \subsection{Akcelerometr -- LSM303C}
-Akcelerometr został wykorzystany do pomiaru przyspieszenia liniowego na tej postawie określano czy załączyć alarm.
+Akcelerometr został wykorzystany do pomiaru przyspieszenia liniowego na tej postawie określano czy załączyć alarm. Wpisanie tych wartości do podanych rejestrów włącza akcelerometr, umożliwia korzystanie ze wszystkich trzech osi, oraz zapewnia dobrą jakość odczytu. Ponadto ustawia wartość szerokości pasma anty aliasingowego na 50Hz, umożliwia korzystanie z SPI oraz ustawia zakres odczytywanych przyspieszeń na $\pm 8g$. \cite{man}
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|c|}
 \hline 
 \textbf{Rejestr} &\textbf{Wartość} \\ \hline \hline
-CTRL\_REG4\_A (0x23) & 0xFD \\ \hline
 CTRL\_REG1\_A (0x20) & 0x4F \\ \hline
+CTRL\_REG4\_A (0x23) & 0xFD \\ \hline
+
 
 \end{tabular}
 \end{table}
 
 \section{Opis działania programu}
 
-
-\section{Założenia projektowe}
-\begin{enumerate}
-\item Projekt będzie wykonywany w oparciu o płytkę STM32L476 Discovery wypożyczoną od prowadzącego kurs
-\item Pomiar przyspieszenia będzie odbywał się przez wbudowany moduł z akcelerometrem
-\item W przypadku wykrycia alarmu urządzenie podejmie określone kroki.
-\item Menu sterowane z joystick'iem zapewni możliwość wybór ustawień sygnalizacji alarmu(dioda oraz głośnik).
-\item Zbieranie danych o alarmach i przechowywanie w pamięci Flash.
-\item Wykorzystanie zegara RTC do umiejscowienia zdarzenia alarmu w jego lokalnym czasie.
-\item Badania dotyczące wykrywania progu alarmu i sprawdzenie funkcjonalności zaprojektowanego urządzenia.
-
-\end{enumerate}
-
-
-\section{Harmonogram pracy}
-
-\subsection{Zakres prac}
-Zapoznanie się z mikrokontrolerem, konfiguracja peryferiów. Implementacja obsługi zarówno pamięci Flash, jak i akcelerometru. Skonfigurowanie zegara RTC w celu późniejszej implementacji przekazywania godziny nieplanowanego ruchu. Zapoznanie z literaturą i poruszanym problemem. Przeprowadzenie badań na temat progów i optymalizacji działania urządzenia. 
-\subsection{Kamienie milowe}
-\begin{enumerate}
-\item Oddanie I etapu projektu. Projekt powinien zawierać założenia oraz plan co będzie podstawą do rozpoczęcia prac.
-\item Oddanie II etapu projektu. Konfiguracja peryferiów powinna być już sfinalizowana, a przynajmniej na etapie pozwalającym rozpoczęcie kolejnego etapu związanego z badaniem przyspieszeń które powinny aktywować alarm.
-\item Oddanie III etapu gdzie projekt powinien być już kompletny.
-Wg planu projekt powinien zakończyć się tydzień przed ostatecznym terminem złożenia pracy u prowadzącego.
-\end{enumerate}
-\subsection{Diagram Gantta}
-
+\section{Testowanie urządzenia}
+Urządzenie testowano pod kątem dobrania odpowiedniej wartości przyspieszenia oznaczającego kradzież. Podczas oprogramowywania założono, że urządzenie -- podczas faktycznego używania w celu wykrycia kradzieży -- będzie znajdowało się w torebce lub plecaku użytkownika. W kontekście tego przeprowadzono testy symulujące upadek z $50cm$. \\ 
+Jak widać na wykresie przy każdym upadku przyspieszenie najpierw spada do bardzo niskich wartości następnie rośnie. W większości przypadków nieznacznie w kontekście kolejnego wykresu, z symulacją kradzieży. Tylko jeden pomiar przekracza $100 \frac{m}{s}$ i jedynie kolejne 2 mają wartości na poziome $70 \frac{m}{s}$. Wszystkie pomiary stabilizują się w okolicach $16 \frac{m}{s}$. Pomiary te nie oddają w pełni upadku swobodnego, ze względu na to że płytka STM32L476 Discovery musi być podłączona do źródła zasilania kablem, który nieco ją blokuje.
 
 \begin{figure}[H]
-	\centering
-	\includegraphics[width=1\textwidth]{figures/dg.png}
-	\caption{Diagram Gantta}
-	\label{fig:DiagramGantta}
+\centering
+\includegraphics[width=13cm]{figures/t1.png}
+\caption{Upadek z 50cm}
 \end{figure}
 
-%Obecne w dokumencie do etapu I
+Na kolejnym wykresie przedstawiono symulację poruszania się z torebką, w zwykły sposób. Pik, który można zaobserwować na wykresie, jest to zarzucenie torebki z urządzeniem na ramię. Jak widać tego typu zdarzenia nie powinny mieć wartości przyspieszenia większej od $100 \frac{m}{s}$. 
+\begin{figure}[H]
+\centering
+\includegraphics[width=13cm]{figures/t2.png}
+\caption{Symulowane dopuszczalne przyspieszenia}
+\end{figure}
+Następy wykres przedstawia symulację kradzieży, zakładamy szarpanie kradniętym przedmiotem, następują częste bardzo wysokie piki wykrywanego przyspieszenia. Największe wartości oscylują wokół $130\frac{m}{s}$.  \begin{figure}[H]
+\centering
+\includegraphics[width=13cm]{figures/t3.png}
+\caption{Symulowana kradzież}
+\end{figure}
 
-\subsection{Podział pracy}
-Oboje uczestnicy projektu zajmą się wstępną konfiguracją peryferiów odbywającą się za pomocą programu CubeMx. Zostanie zaimplementowana obsługa pamięci Flash, a także akcelerometru. W tym czasie opracowany zostanie również sposób przechowywania danych na zewnętrznej pamięci Flash. Projekt menu ma zakładać możliwość wyboru sygnału uruchamiającego alarm.
+%\section{Założenia projektowe}
+%\begin{enumerate}
+%\item Projekt będzie wykonywany w oparciu o płytkę STM32L476 Discovery wypożyczoną od prowadzącego kurs
+%\item Pomiar przyspieszenia będzie odbywał się przez wbudowany moduł z akcelerometrem
+%\item W przypadku wykrycia alarmu urządzenie podejmie określone kroki.
+%\item Menu sterowane z joystick'iem zapewni możliwość wybór ustawień sygnalizacji alarmu(dioda oraz głośnik).
+%\item Zbieranie danych o alarmach i przechowywanie w pamięci Flash.
+%\item Wykorzystanie zegara RTC do umiejscowienia zdarzenia alarmu w jego lokalnym czasie.
+%\item Badania dotyczące wykrywania progu alarmu i sprawdzenie funkcjonalności zaprojektowanego urządzenia.
+%
+%\end{enumerate}
+%
+%
+%\section{Harmonogram pracy}
+%
+%\subsection{Zakres prac}
+%Zapoznanie się z mikrokontrolerem, konfiguracja peryferiów. Implementacja obsługi zarówno pamięci Flash, jak i akcelerometru. Skonfigurowanie zegara RTC w celu późniejszej implementacji przekazywania godziny nieplanowanego ruchu. Zapoznanie z literaturą i poruszanym problemem. Przeprowadzenie badań na temat progów i optymalizacji działania urządzenia. 
+%\subsection{Kamienie milowe}
+%\begin{enumerate}
+%\item Oddanie I etapu projektu. Projekt powinien zawierać założenia oraz plan co będzie podstawą do rozpoczęcia prac.
+%\item Oddanie II etapu projektu. Konfiguracja peryferiów powinna być już sfinalizowana, a przynajmniej na etapie pozwalającym rozpoczęcie kolejnego etapu związanego z badaniem przyspieszeń które powinny aktywować alarm.
+%\item Oddanie III etapu gdzie projekt powinien być już kompletny.
+%Wg planu projekt powinien zakończyć się tydzień przed ostatecznym terminem złożenia pracy u prowadzącego.
+%\end{enumerate}
+%\subsection{Diagram Gantta}
+%
+%
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=1\textwidth]{figures/dg.png}
+%	\caption{Diagram Gantta}
+%	\label{fig:DiagramGantta}
+%\end{figure}
+%
+%%Obecne w dokumencie do etapu I
+%
+%\subsection{Podział pracy}
+%Oboje uczestnicy projektu zajmą się wstępną konfiguracją peryferiów odbywającą się za pomocą programu CubeMx. Zostanie zaimplementowana obsługa pamięci Flash, a także akcelerometru. W tym czasie opracowany zostanie również sposób przechowywania danych na zewnętrznej pamięci Flash. Projekt menu ma zakładać możliwość wyboru sygnału uruchamiającego alarm.
+%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{|L{7cm}|L{0.8cm}||L{7cm}|L{0.8cm}|}
+%		\hline
+%		\hline
+%		\textbf{Sylwester Kozieja} & 
+%		\% & 
+%		\textbf{Paula Langkafel} & \%\\
+%		\hline
+%		\hline
+%		Wstępna konfiguracja peryferiów w programie CubeMx		& &	
+%		Wstępna konfiguracja peryferiów w programie CubeMx & \\
+%		\hline
+%		Wstępny projekt menu& &
+%		Implementacja obsługi akcelerometru &\\
+%		
+%		\hline Konfiguracja zegara RTC & & &\\
+%		\hline
+%	\end{tabular}
+%	\caption{Podział pracy -- Etap II}
+%	\label{tab:PodzialPracyEtap2}
+%\end{table}
+%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{|L{7cm}|L{0.8cm}||L{7cm}|L{0.8cm}|}
+%		\hline
+%		\hline
+%		\textbf{Sylwester Kozieja} & 
+%		\% & 
+%		\textbf{Paula Langkafel} & \%\\
+%		\hline
+%		\hline
+%		Oprogramowanie zewnętrznej pamięci Flash oraz opracowanie sposobu przechowywania danych		& &	
+%		Opracowanie kryteriów wykrywania alarmu &\\
+%		\hline
+%		Implementacja opracowanych rozwiązań wykrywania alarmu  & &
+%		Wykonanie testów urządzenia &\\
+%		\hline
+%		Sygnalizacja audiowizualna za pomocą Audio DAC oraz diody LED & & &\\
+%		\hline
+%	\end{tabular}
+%	\caption{Podział pracy -- Etap III}
+%	\label{tab:PodzialPracyEtap3}
+%\end{table}
 
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|L{7cm}|L{0.8cm}||L{7cm}|L{0.8cm}|}
-		\hline
-		\hline
-		\textbf{Sylwester Kozieja} & 
-		\% & 
-		\textbf{Paula Langkafel} & \%\\
-		\hline
-		\hline
-		Wstępna konfiguracja peryferiów w programie CubeMx		& &	
-		Wstępna konfiguracja peryferiów w programie CubeMx & \\
-		\hline
-		Wstępny projekt menu& &
-		Implementacja obsługi akcelerometru &\\
-		
-		\hline Konfiguracja zegara RTC & & &\\
-		\hline
-	\end{tabular}
-	\caption{Podział pracy -- Etap II}
-	\label{tab:PodzialPracyEtap2}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|L{7cm}|L{0.8cm}||L{7cm}|L{0.8cm}|}
-		\hline
-		\hline
-		\textbf{Sylwester Kozieja} & 
-		\% & 
-		\textbf{Paula Langkafel} & \%\\
-		\hline
-		\hline
-		Oprogramowanie zewnętrznej pamięci Flash oraz opracowanie sposobu przechowywania danych		& &	
-		Opracowanie kryteriów wykrywania alarmu &\\
-		\hline
-		Implementacja opracowanych rozwiązań wykrywania alarmu  & &
-		Wykonanie testów urządzenia &\\
-		\hline
-		Sygnalizacja audiowizualna za pomocą Audio DAC oraz diody LED & & &\\
-		\hline
-	\end{tabular}
-	\caption{Podział pracy -- Etap III}
-	\label{tab:PodzialPracyEtap3}
-\end{table}
-
-\section{Podsumowanie etapu II}
+\section{Zakres wykonanej pracy}
 \subsection{Akcelerometr}
-Z niewiadomych przyczyn akcelerometr nie działa, na wyjściu mamy do czynienia z wartością 255, czyli maksimum zakresu. Próby oprogramowania były zgodne z dokumentacją, komunikacja odbywa się w trybie half duplex master. Piny dotyczące innych peryferiów w pewien sposób związanych z używanymi zostały wprowadzone w stan wysoki.
+Akcelerometr działa na komunikacji przez SPI, w trybie half duplex master. Piny dotyczące innych peryferiów w pewien sposób związanych z używanymi zostały wprowadzone w stan wysoki, tak żeby nie zakłócać pomiaru.
 \subsection{Wyświetlacz z menu i zegarem RTC}
 Pierwszy commit miał na celu stworzenie pierwszego prostego programu, który sprawdzał komunikację z diodami LED oraz wyświetlaczem.
 W drugim commicie zostało zaimplementowane menu wraz z podstawowymi opcjami i zegar RTC będący podstawą do obliczania czasu co jest niezbędne do umiejscowienia alarmu w czasie. Urządzenie inicjowane jest stałą datą i godziną, ale istnieje możliwość ustawienia czasu w menu. Również w menu można ustawić flagi aktywność sygnalizacji alarmu dźwiękiem i diodą.
+
+
+
 \subsection{Opis menu}
 
 Opcje menu:
@@ -482,8 +506,16 @@ Opcje menu:
 
 \end {itemize}
 
+\section{Podsumowanie}
 
-\
+
+
+
+%\section{Podsumowanie etapu III}
+%\subsection{Akcelerometr}
+%Akcelerometr został oprogramowany. 
+
+
 \newpage
 %\section{Literatura}
 %\begin{enumerate}
