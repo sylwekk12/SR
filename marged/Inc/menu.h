@@ -8,7 +8,7 @@
 #ifndef MENU_H_
 #define MENU_H_
 
-
+#include "stm32l476g_discovery.h"
 
 enum Joy_Event
 {
@@ -48,6 +48,9 @@ void Start_Acc();
 void SetLED();
 void SetAUDIO();
 
+extern int8_t spiRxBufx[2];
+extern int8_t spiRxBufy[2];
+extern int8_t spiRxBufz[2];
 
 
 #endif /* MENU_H_ */

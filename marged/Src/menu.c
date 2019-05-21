@@ -9,10 +9,12 @@
 #include "main.h"
 #include "myTime.h"
 #include "pamiec.h"
+#include "stm32l4xx_hal_rtc.h"
+
 
 enum OStatus oStatus;
 enum Joy_Event joy_event;
-RTC_HandleTypeDef hrtc;
+extern RTC_HandleTypeDef hrtc;
 SAI_HandleTypeDef hsai_BlockA1;
 
 char* Start = "START ";
@@ -23,14 +25,25 @@ char* SAUDIO = "AUDIO ";
 char* DTime = " WYPISZ GODZ ";
 char* SAlarms = " WYSWIETL ALARMY ";
 
-char* tab[26];
+char* tab[29];
 
+// pomocnicze
+uint8_t min(uint8_t a, uint8_t b)
+{
+	return (a < b ? a : b);
+}
 
-char* alarm_to_string(struct alarm* alm)
+uint8_t max(uint8_t a, uint8_t b)
+{
+	return (a > b ? a : b);
+}
+
+//alarm
+char* alarm_to_string(struct alarm* alm, uint8_t index)
 {
 	char tmp[8];
-	char table[26];
-	strcat(table,"ALARM ");
+	char table[29];
+	strcat(table,"ALARM");itoa(index,tmp,10);strcat(table,tmp);strcat(table," ");
 	itoa(alm->hour,tmp,10);strcat(table,tmp);strcat(table,"-");
 	itoa(alm->min, tmp,10);strcat(table,tmp);strcat(table," ");
 	itoa(alm->day, tmp,10);strcat(table,tmp);strcat(table, "-");
@@ -46,13 +59,6 @@ void WyswietlAlarmy() //TODO wczytywanie z flasha i wyswietlanie
 	struct alarm alm;
 	uint8_t it = 0;
 
-	alm.day = 10;
-	alm.hour = 21;
-	alm.min = 37;
-	alm.year = 2004;
-	alm.month = 4;
-	alm.sec = 24;
-	zapisz(alm);
 	if(wczytaj(&alm,it) != POK)
 	{
 		BSP_LCD_GLASS_ScrollSentence("  BRAK ALARMOW",1,200);
@@ -60,26 +66,26 @@ void WyswietlAlarmy() //TODO wczytywanie z flasha i wyswietlanie
 		__RESET_JOY(joy_event);
 		return;
 	}
-	napis = alarm_to_string(&alm);
+	napis = alarm_to_string(&alm, it);
 
 	while(joy_event!=fJOY_CENTER&&joy_event!=fJOY_LEFT)
 	{
 
 		switch(joy_event)
 		{
-		case fJOY_UP:
+		case fJOY_DOWN:
 			__RESET_JOY(joy_event);
 			if(wczytaj(&alm,it-1) == POK)
 			{
-				napis = alarm_to_string(&alm);
+				napis = alarm_to_string(&alm, it);
 				it-=1;
 			}
 			break;
-		case fJOY_DOWN:
+		case fJOY_UP:
 			__RESET_JOY(joy_event);
 			if(wczytaj(&alm,it+1) == POK)
 			{
-				napis = alarm_to_string(&alm);
+				napis = alarm_to_string(&alm, it);
 				it+=1;
 			}
 			break;
@@ -94,6 +100,7 @@ void WyswietlAlarmy() //TODO wczytywanie z flasha i wyswietlanie
 
 }
 
+//menu
 void PetlaMenu()
 {
 	enum Option opt = OptStart;
@@ -187,13 +194,67 @@ void Obsluz(enum Option opt)
 
 void Start_Acc()
 {
+	struct alarm alm;
+	int16_t t_m1,t,zryw;
+	RTC_TimeTypeDef sTime; RTC_DateTypeDef sDate;
+
+	AKC_Init();
+	AKC_Pomiar();
+	t_m1 = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]+spiRxBufy[0] + spiRxBufz[0]*spiRxBufz[0]);
+
+
+	while(joy_event!=fJOY_LEFT)
+	{
+	//	BSP_LCD_GLASS_ScrollSentence("Alarm aktywny", 1, 500);
+
+	//	HAL_Delay(10);
+		AKC_Pomiar();
+		t = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]+spiRxBufy[0] + spiRxBufz[0]*spiRxBufz[0]);
+		zryw = min(t_m1-t,t-t_m1);
+		t_m1 = t;
+
+		if(zryw>2)
+		{
+			HAL_RTC_GetTime(&hrtc,&sTime,RTC_FORMAT_BIN);
+			HAL_RTC_GetDate(&hrtc,&sDate,RTC_FORMAT_BIN);
+
+			alm.day = sDate.Date;
+			alm.month = sDate.Month;
+			alm.year = sDate.Year+2000;
+
+			alm.hour = sTime.Hours;
+			alm.min = sTime.Minutes;
+
+			if(zapisz(alm) == POK)
+			{
+
+				if(oStatus & fLED)
+				HAL_GPIO_TogglePin(GPIOB,LED_R_Pin);
+
+				HAL_Delay(5000);
+				if(oStatus & fLED)
+				HAL_GPIO_TogglePin(GPIOB,LED_R_Pin);
+				AKC_Pomiar();
+				t_m1 = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]+spiRxBufy[0] + spiRxBufz[0]*spiRxBufz[0]);
+			}
+			else{
+				BSP_LCD_GLASS_ScrollSentence("Koniec miejsca w pamieci");
+				HAL_Delay(5000);
+				return;
+			}
+
+
+
+
+		}
+	}
 	return;
 }
 
 void SetAUDIO()
 {
 	enum OStatus outst = oStatus;
-	uint16_t tabs[16000];
+//	uint16_t tabs[16000];
 
 
 	while(joy_event!=fJOY_CENTER)

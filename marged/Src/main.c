@@ -24,7 +24,11 @@
 #include "menu.h"
 #include "myTime.h"
 #include <math.h>
+#include "maudio.h"
+#include "stm32l4xx_hal_rcc.h"
+#include "cs43l22.h"
 
+//void HAL_SAI_MspInit(SAI_HandleTypeDef *hsai);
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -39,9 +43,7 @@
 /* USER CODE BEGIN PD */
 
 /* USER CODE END PD */
-extern int8_t spiRxBufx[2];
-extern int8_t spiRxBufy[2];
-extern int8_t spiRxBufz[2];
+
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
@@ -57,7 +59,8 @@ QSPI_HandleTypeDef hqspi;
 RTC_HandleTypeDef hrtc;
 
 SAI_HandleTypeDef hsai_BlockB1;
-SAI_HandleTypeDef hsai_BlockA1;
+extern SAI_HandleTypeDef hsai_BlockA1;
+
 
 SPI_HandleTypeDef hspi2;
 
@@ -67,6 +70,7 @@ DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 
+extern AUDIO_DrvTypeDef            *audio_drv;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,17 +91,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-uint8_t min(uint8_t a, uint8_t b)
-{
-	return (a < b ? a : b);
-}
 
-uint8_t max(uint8_t a, uint8_t b)
-{
-	return (a > b ? a : b);
-}
 
 /* USER CODE END 0 */
+
 
 /**
   * @brief  The application entry point.
@@ -112,10 +109,11 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+	__IO int16_t                 UpdatePointer = -1;
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -139,23 +137,60 @@ int main(void)
   BSP_LCD_GLASS_Init();
   BSP_QSPI_Init();
 
+
+  HAL_SAI_MspInit2(&hsai_BlockA1);
+  Playback_Init();
   AKC_Init();
   /* USER CODE END 2 */
 
-  char x[4];
 
-  x[4] = '\0';
-
-  AKC_Pomiar();
-  uint8_t t_minus_jeden;
-  uint8_t t_0;
-
-  uint8_t rozniczkujemy;
-  uint8_t max1;
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint16_t PlayBuff[PLAY_BUFF_SIZE];
+
+  if(0 != audio_drv->Play(AUDIO_I2C_ADDRESS, NULL, 0))
+    {
+      Error_Handler();
+    }
+
+  for(int i=0; i < PLAY_BUFF_SIZE; i+=2)
+    {
+      PlayBuff[i]=*((__IO uint16_t *)(AUDIO_FILE_ADDRESS + PLAY_HEADER + i));
+    }
+
+
+
+  int j = 0;
+  for(int i = 0; i < PLAY_BUFF_SIZE/4; i++)
+  {
+     PlayBuff[i] = i;
+  }
+  j=PLAY_BUFF_SIZE/4;
+  for(int i = 0; i < PLAY_BUFF_SIZE/2; i++)
+  {
+     PlayBuff[i] = j-i;
+  }
+  j=-PLAY_BUFF_SIZE/4;
+  for(int i = 0; i < PLAY_BUFF_SIZE/4; i++)
+  {
+      PlayBuff[i] = j+i;
+  }
+
+//  audio_drv->Pause(AUDIO_I2C_ADDRESS);
+//  if(HAL_OK != HAL_SAI_Transmit(&hsai_BlockA1, (uint8_t *)PlayBuff, PLAY_BUFF_SIZE,1000))
+//  {
+//    Error_Handler();
+//  }
+
+//  HAL_Delay(2000);
+//  cs43l22_Pause(AUDIO_I2C_ADDRESS);
+
+ // AUDIO_IO_Init();
+ // AUDIO_IO_Write(,,PlayBuff)
+
   while (1)
   {
+
 	//  if(joy_event == fJOY_CENTER)
 	//  {
 	//	  __RESET_JOY(joy_event);
@@ -183,6 +218,7 @@ int main(void)
 	  {
 	  	  __RESET_JOY(joy_event);
 	  	  PetlaMenu();
+
 	  }
 
 	  HAL_Delay(100);
@@ -289,6 +325,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
 }
 
 /**
@@ -476,6 +513,8 @@ static void MX_RTC_Init(void)
   * @param None
   * @retval None
   */
+
+
 static void MX_SAI1_Init(void)
 {
 
@@ -520,6 +559,8 @@ static void MX_SAI1_Init(void)
   /* USER CODE END SAI1_Init 2 */
 
 }
+
+
 
 /**
   * @brief SPI2 Initialization Function
@@ -712,6 +753,8 @@ static void MX_GPIO_Init(void)
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
+
+
 
 /* USER CODE BEGIN 4 */
 

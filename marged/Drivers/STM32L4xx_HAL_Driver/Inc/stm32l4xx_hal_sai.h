@@ -776,7 +776,7 @@ typedef void (*pSAI_CallbackTypeDef)(SAI_HandleTypeDef *hsai);
 HAL_StatusTypeDef HAL_SAI_InitProtocol(SAI_HandleTypeDef *hsai, uint32_t protocol, uint32_t datasize, uint32_t nbslot);
 HAL_StatusTypeDef HAL_SAI_Init(SAI_HandleTypeDef *hsai);
 HAL_StatusTypeDef HAL_SAI_DeInit(SAI_HandleTypeDef *hsai);
-void HAL_SAI_MspInit(SAI_HandleTypeDef *hsai);
+//void HAL_SAI_MspInit(SAI_HandleTypeDef *hsai);
 void HAL_SAI_MspDeInit(SAI_HandleTypeDef *hsai);
 
 #if (USE_HAL_SAI_REGISTER_CALLBACKS == 1)
