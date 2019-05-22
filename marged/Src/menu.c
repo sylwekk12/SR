@@ -229,11 +229,16 @@ void Start_Acc()
 			{
 
 				if(oStatus & fLED)
-				HAL_GPIO_TogglePin(GPIOB,LED_R_Pin);
+					HAL_GPIO_TogglePin(GPIOB,LED_R_Pin);
+				if(oStatus & fAUDIO)
+					HAL_SAI_DMAResume(&hsai_BlockA1);
 
 				HAL_Delay(5000);
+
 				if(oStatus & fLED)
-				HAL_GPIO_TogglePin(GPIOB,LED_R_Pin);
+					HAL_GPIO_TogglePin(GPIOB,LED_R_Pin);
+				if(oStatus & fAUDIO)
+					HAL_SAI_DMAPause(&hsai_BlockA1);
 				AKC_Pomiar();
 				t_m1 = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]+spiRxBufy[0] + spiRxBufz[0]*spiRxBufz[0]);
 			}

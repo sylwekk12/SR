@@ -176,11 +176,19 @@ int main(void)
       PlayBuff[i] = j+i;
   }
 
-//  audio_drv->Pause(AUDIO_I2C_ADDRESS);
-//  if(HAL_OK != HAL_SAI_Transmit(&hsai_BlockA1, (uint8_t *)PlayBuff, PLAY_BUFF_SIZE,1000))
+//
+HAL_SAI_Transmit_DMA(&hsai_BlockA1, (uint8_t *)PlayBuff, PLAY_BUFF_SIZE);
+
+HAL_SAI_DMAPause(&hsai_BlockA1);
 //  {
-//    Error_Handler();
+///   Error_Handler();
 //  }
+
+//  for(int i = 0; i < PLAY_BUFF_SIZE; i++)
+ //   {
+ //       PlayBuff[i] = 0;
+ //   }
+
 
 //  HAL_Delay(2000);
 //  cs43l22_Pause(AUDIO_I2C_ADDRESS);
