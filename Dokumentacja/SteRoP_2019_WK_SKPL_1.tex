@@ -296,6 +296,7 @@ Interfejs wyświetlacza umożliwiający komunikację z urządzeniem poprzez zapr
 
 \subsection{GPIO}
 Prosty interfejs do sterowania cyfrowymi wejściami/wyjściami. Użyty do obsługi LED i joystick'a. 5 pinów dla joystick'a (PA0:3 i PA5) oraz pin dla diody LED (PB2).
+\newpage
 
 \subsection{SPI}
 Akcelerometr, który będzie podstawą projektu, służy do pomiaru przyspieszenia na którym będzie bazowało kryterium stwierdzenia kradzieży.
@@ -359,7 +360,7 @@ Interfejs do obsługi wyjścia audio. Na jego podstawie będzie wysyłany komuni
 %\item MEMS\\
 %albo tu akcelerometr
 %\end{enumerate}
-
+\newpage
 \section{Urządzenia zewnętrzne}
 \subsection{Akcelerometr -- LSM303C}
 Akcelerometr został wykorzystany do pomiaru przyspieszenia liniowego na tej postawie określano czy załączyć alarm. Wpisanie tych wartości do podanych rejestrów włącza akcelerometr, umożliwia korzystanie ze wszystkich trzech osi, oraz zapewnia dobrą jakość odczytu. Ponadto ustawia wartość szerokości pasma anty aliasingowego na 50Hz, umożliwia korzystanie z SPI oraz ustawia zakres odczytywanych przyspieszeń na $\pm 8g$. \cite{man}
@@ -375,8 +376,41 @@ CTRL\_REG4\_A (0x23) & 0xFD \\ \hline
 \end{tabular}
 \end{table}
 
-\section{Opis działania programu}
+\section{Opis działania programu i poszczególnych modułów}
+pamiec.c\\
+Obsluga pamięci flash przez qspi poprzez funkcje zapisz wczytaj.
+\\  
 
+akcelerometr.c\\
+Inicjalizacja i wykonywanie pomiarów akcelerometrem.
+\\  
+
+mytime.c \\
+Ustawianie daty i godziny oraz wypisywanie godziny na wyświetlaczu. \\  
+
+menu.c\\
+Moduł realizujący pętlę menu oraz obsługujący zadane opcje. \\ 
+
+audio.c\\
+Inicjalizacja audio. \\ 
+
+main.c \\
+Wywołanie inicjalizacji interfejsów, pętla główna w której wypisywana jest godzina i wywoływane jest menu na żądanie użytkownika. \\  
+
+
+\subsection{Opis działania urządzenia}
+
+Urządzenie obsługiwane jest poprzez proste menu pozwalające ustawić datę godzinę i sygnalizację oraz wyświetlić zarejestrowane już alarmy. Funkcja Start jest odpowiedzialna za wykrywanie i zapisywanie alarmów.
+Wykrywa zmiany wartości wektora przyspieszenia w celu uzyskania danych o stanie fizycznym urządzenia. Na podstawie prostego wzoru określamy kryterium uruchomienia alarmu i po wykryciu wykonujemy odpowiednie procedury sygnalizacji i zapisu.
+Urządzenie może przechowywać obecnie 500 zarejestrowanych alarmów. \\
+
+Obsługa jest realizowana za pomocą Joystick'a i wyświetlacza LCD służącego do komunikacji z użytkownikiem.
+\subsection{Schemat blokowy działania urządzenia}
+\begin{figure}[H]
+\centering
+\includegraphics[width=13cm]{figures/d.png}
+\caption{Schemat blokowy interakcji urządzenia z użytkownikiem}
+\end{figure}
 \section{Testowanie urządzenia}
 Urządzenie testowano pod kątem dobrania odpowiedniej wartości przyspieszenia oznaczającego kradzież. Podczas oprogramowywania założono, że urządzenie -- podczas faktycznego używania w celu wykrycia kradzieży -- będzie znajdowało się w torebce lub plecaku użytkownika. W kontekście tego przeprowadzono testy symulujące upadek z $50cm$. \\ 
 Jak widać na wykresie przy każdym upadku przyspieszenie najpierw spada do bardzo niskich wartości następnie rośnie. W większości przypadków nieznacznie w kontekście kolejnego wykresu, z symulacją kradzieży. Tylko jeden pomiar przekracza $100 \frac{m}{s}$ i jedynie kolejne 2 mają wartości na poziome $70 \frac{m}{s}$. Wszystkie pomiary stabilizują się w okolicach $16 \frac{m}{s}$. Pomiary te nie oddają w pełni upadku swobodnego, ze względu na to że płytka STM32L476 Discovery musi być podłączona do źródła zasilania kablem, który nieco ją blokuje.
@@ -507,7 +541,7 @@ Opcje menu:
 \end {itemize}
 
 \section{Podsumowanie}
-
+Urządzenie może być wykorzystywane jako wykrywacz kradzieży, taka jest jego podstawowa funkcja. Ponadto przy włączeniu tylko jednej osi i zamontowaniu w samochodzie urządzenie może być wykorzystywane do na przykład oceny jakości dróg.  
 
 
 
