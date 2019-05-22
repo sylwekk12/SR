@@ -42,6 +42,9 @@
 extern int8_t spiRxBufx[2];
 extern int8_t spiRxBufy[2];
 extern int8_t spiRxBufz[2];
+extern int8_t x1;
+extern int8_t y;
+extern int8_t z;
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
@@ -92,7 +95,7 @@ uint8_t min(uint8_t a, uint8_t b)
 	return (a < b ? a : b);
 }
 
-uint8_t t_minus_jeden;
+uint32_t t_minus_jeden;
 
 /* USER CODE END 0 */
 
@@ -144,11 +147,11 @@ int main(void)
   x[4] = '\0';
 
   AKC_Pomiar();
-<<<<<<< HEAD
-  uint8_t t_minus_jeden;
+//<<<<<<< HEAD
+  //uint8_t t_minus_jeden;
   uint8_t t_0;
-=======
->>>>>>> f2123a14694143dcd78fe2e89ddce544868c9d96
+//=======
+//>>>>>>> f2123a14694143dcd78fe2e89ddce544868c9d96
 
   uint8_t rozniczkujemy;
   /* Infinite loop */
@@ -164,7 +167,9 @@ int main(void)
 	//  strcpy(x,"\0\0\0\0");
 	  BSP_LCD_GLASS_Clear();
 
-	  t_minus_jeden = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]*spiRxBufy[0] + spiRxBufz[0] * spiRxBufz[0]);
+	  //t_minus_jeden = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]*spiRxBufy[0] + spiRxBufz[0] * spiRxBufz[0]);
+	  t_minus_jeden = sqrt(x1*x1+y*y+z*z);
+
 	  AKC_Pomiar();
 	//  rozniczkujemy = min(spiRxBufx[0] - t_minus_jeden, t_minus_jeden - spiRxBufx[0]);
 	  t_0 = sqrt(spiRxBufx[0]*spiRxBufx[0] + spiRxBufy[0]*spiRxBufy[0] + spiRxBufz[0] * spiRxBufz[0]);

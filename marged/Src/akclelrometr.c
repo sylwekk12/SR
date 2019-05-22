@@ -17,6 +17,9 @@ uint8_t spiTxBufz[2];//tablica danych wysylanych do urzadzenia Z
 uint8_t spiRxBufy[2];//tablica danych odbieranych z urzadzenia Y
 uint8_t spiRxBufx[2];//tablica danych odbieranych z urzadzenia X
 uint8_t spiRxBufz[2];//tablica danych odbieranych z urzadzenia Z
+int8_t x1;
+int8_t y;
+int8_t z;
 
 void AKC_Init()
 {
@@ -61,23 +64,29 @@ void AKC_Init()
 void AKC_Pomiar()
 {
 	HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
-    spiTxBufx[0] = 0x29|0x80;
-    HAL_SPI_Transmit(&hspi2,spiTxBufx,1,50);
-    __HAL_SPI_DISABLE(&hspi2);
-    HAL_SPI_Receive(&hspi2,spiRxBufx,1,50);
-    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+	    spiTxBufx[0] = 0x29|0x80;
+	    spiTxBufx[1] = 0x28|0x80;
+	    HAL_SPI_Transmit(&hspi2,spiTxBufx,2,50);
+	    __HAL_SPI_DISABLE(&hspi2);
+	    HAL_SPI_Receive(&hspi2,spiRxBufx,2,50);
+	    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+	    x1=(spiRxBufx[0]<<8)|spiRxBufx[1];
 
-    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
-    spiTxBufy[0] = 0x2B|0x80;
-    HAL_SPI_Transmit(&hspi2,spiTxBufy,1,50);
-    __HAL_SPI_DISABLE(&hspi2);
-    HAL_SPI_Receive(&hspi2,spiRxBufy,1,50);
-    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+	    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
+	    spiTxBufy[0] = 0x2B|0x80;
+	    spiTxBufy[1] = 0x2A|0x80;
+	    HAL_SPI_Transmit(&hspi2,spiTxBufy,2,50);
+	    __HAL_SPI_DISABLE(&hspi2);
+	    HAL_SPI_Receive(&hspi2,spiRxBufy,2,50);
+	    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+	    y=(spiRxBufy[0]<<8)|spiRxBufy[1];
 
-    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
-    spiTxBufz[0] = 0x2D|0x80;
-    HAL_SPI_Transmit(&hspi2,spiTxBufz,1,50);
-    __HAL_SPI_DISABLE(&hspi2);
-    HAL_SPI_Receive(&hspi2,spiRxBufz,1,50);
-    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+	    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_RESET);
+	    spiTxBufz[0] = 0x2D|0x80;
+	    spiTxBufz[1] = 0x2C|0x80;
+	    HAL_SPI_Transmit(&hspi2,spiTxBufz,2,50);
+	    __HAL_SPI_DISABLE(&hspi2);
+	    HAL_SPI_Receive(&hspi2,spiRxBufz,2,50);
+	    HAL_GPIO_WritePin(GPIOE,GPIO_PIN_0,GPIO_PIN_SET);
+	    z=(spiRxBufz[0]<<8)|spiRxBufz[1];
 }
